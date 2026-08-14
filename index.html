@@ -1698,6 +1698,81 @@ body {
 .sface.bk {
   transform: rotateY(180deg) translateZ(.1px);
 }
+.app[data-layout=single] .reader:not(.notemode) .bookinner {
+  max-width: min(830px, calc(100% - 60px));
+}
+.edgestack {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  transition: width .45s cubic-bezier(.3, .7, .35, 1), left .45s cubic-bezier(.3, .7, .35, 1);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(252, 248, 238, .96) 0 1px,
+      rgba(206, 193, 166, .85) 1px 2px,
+      rgba(240, 233, 217, .92) 2px 3px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, .24);
+}
+.edgestack.es-left {
+  border-radius: 4px 0 0 4px;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(60, 42, 20, .34),
+      rgba(60, 42, 20, .05) 42%,
+      rgba(0, 0, 0, .14)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(252, 248, 238, .96) 0 1px,
+      rgba(206, 193, 166, .85) 1px 2px,
+      rgba(240, 233, 217, .92) 2px 3px);
+}
+.edgestack.es-right {
+  border-radius: 0 4px 4px 0;
+  background-image:
+    linear-gradient(
+      270deg,
+      rgba(60, 42, 20, .34),
+      rgba(60, 42, 20, .05) 42%,
+      rgba(0, 0, 0, .14)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(252, 248, 238, .96) 0 1px,
+      rgba(206, 193, 166, .85) 1px 2px,
+      rgba(240, 233, 217, .92) 2px 3px);
+}
+.app.nomotion .edgestack {
+  transition: none;
+}
+.reader.cwait .edgestack,
+.reader.cshut .edgestack {
+  opacity: 0;
+}
+.app[data-layout=single] .bpage {
+  overflow: hidden;
+}
+.app[data-layout=single] .bookinner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.app[data-layout=single] .bookflow {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.app[data-layout=single] .bookflow::-webkit-scrollbar {
+  display: none;
+}
+.app[data-layout=single] .reader:not(.notemode) .bookflow {
+  max-width: 34em;
+  margin: 0 auto;
+  width: 100%;
+}
 .sclip {
   position: absolute;
   inset: 0;
@@ -2786,11 +2861,7 @@ body {
 }
 .pg-type .mat {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(1680px, 97%);
-  height: min(1180px, 99%);
+  inset: 14px;
   border-radius: 14px;
   background:
     radial-gradient(
@@ -2852,11 +2923,7 @@ body {
 }
 .pg-parchment .pmat {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(1680px, 97%);
-  height: min(1120px, 97%);
+  inset: 14px;
   border-radius: 10px;
   background:
     radial-gradient(
@@ -2915,6 +2982,9 @@ body {
 }
 .app[data-page=type] .bpage {
   padding: 92px 0 88px;
+}
+.app[data-page=parchment] .bpage {
+  padding: 54px 0 52px;
 }
 .app[data-layout=spread][data-page=type] .bpage .bookinner {
   background:
@@ -18685,6 +18755,54 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
   }, [showCover, spread]);
   const spreadRef = (0, import_react5.useRef)({ idx: 0, count: 1, w: 0 });
   const [spreadInfo, setSpreadInfo] = (0, import_react5.useState)({ idx: 0, count: 1, colW: 0, gap: 0, boxLeft: 0 });
+  const [sheetBox, setSheetBox] = (0, import_react5.useState)(null);
+  const [prog, setProg] = (0, import_react5.useState)(0);
+  const bound = settings.pageStyle === "paper" || settings.pageStyle === "parchment";
+  function readProgress() {
+    const n = book.chapters.length;
+    let within = 0;
+    if (spread) {
+      const s = spreadRef.current;
+      within = s.count > 1 ? s.idx / (s.count - 1) : 0;
+    } else {
+      const el = contentRef.current;
+      if (el && el.scrollHeight > el.clientHeight + 4) {
+        within = el.scrollTop / (el.scrollHeight - el.clientHeight);
+      }
+    }
+    return Math.max(0, Math.min(1, (chRef.current + Math.min(1, within)) / n));
+  }
+  function measureSheet() {
+    const sheet = sheetRef.current, pane = paneRef.current;
+    if (!sheet || !pane) return;
+    const r = sheet.getBoundingClientRect(), p = pane.getBoundingClientRect();
+    if (r.width < 40 || r.height < 40) return;
+    setSheetBox({
+      left: Math.round(r.left - p.left),
+      top: Math.round(r.top - p.top),
+      w: Math.round(r.width),
+      h: Math.round(r.height)
+    });
+    setProg(readProgress());
+  }
+  (0, import_react5.useEffect)(() => {
+    if (!bound) {
+      setSheetBox(null);
+      return;
+    }
+    let n = 0, raf = 0;
+    const tick = () => {
+      measureSheet();
+      if (n++ < 3) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    const onR = () => measureSheet();
+    window.addEventListener("resize", onR);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onR);
+    };
+  }, [bound, spread, ch, bookId, settings.fontSize, settings.lineHeight, settings.pageStyle]);
   const pendingLastRef = (0, import_react5.useRef)(false);
   const pendingHintRef = (0, import_react5.useRef)(false);
   (0, import_react5.useEffect)(() => {
@@ -18755,7 +18873,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       }
     }
     pane.appendChild(ghost);
-    ghost.scrollTop = oldScroll;
+    flow.scrollTop = oldScroll;
     requestAnimationFrame(() => requestAnimationFrame(() => ghost.classList.add("g-go")));
     setTimeout(() => ghost.remove(), 750);
     lastDrag.current = 0;
@@ -18769,7 +18887,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     if (!el) return;
     const oldHtml = el.innerHTML;
     const oldStyle = el.getAttribute("style");
-    const oldScroll = pageRef.current ? pageRef.current.scrollTop : 0;
+    const oldScroll = el.scrollTop || 0;
     el.style.transform = "";
     el.style.opacity = "";
     el.style.transition = "";
@@ -18790,14 +18908,11 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       const ct = (book.chapters[chRef.current].title || "").replace(/["\\]/g, "");
       sheet.style.setProperty("--chtitle", '"' + ct + '"');
     }
-    const page = pageRef.current;
-    if (page) {
-      if (dirRef.current !== 0) {
-        dirRef.current = 0;
-        page.scrollTop = 0;
-      } else {
-        page.scrollTop = posRef.current.scroll[chRef.current] || 0;
-      }
+    if (dirRef.current !== 0) {
+      dirRef.current = 0;
+      el.scrollTop = 0;
+    } else if (!spread) {
+      el.scrollTop = posRef.current.scroll[chRef.current] || 0;
     }
     if (spread) setupSpread(turnedDir > 0 ? 0 : null);
     if (jump && jump.hlId && jump.chapter === chRef.current) {
@@ -18850,6 +18965,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
   }, [spread]);
   function onPageScroll(e) {
     if (spread) return;
+    if (bound) setProg(readProgress());
     posRef.current.scroll[chRef.current] = e.target.scrollTop;
     clearTimeout(scrollTimer.current);
     scrollTimer.current = setTimeout(persistPos, 500);
@@ -18875,6 +18991,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     }, 560);
     posRef.current.scroll[chRef.current] = idx;
     setSpreadInfo((v2) => ({ ...v2, idx, count: s.count }));
+    if (bound) setProg(readProgress());
     clearTimeout(scrollTimer.current);
     scrollTimer.current = setTimeout(persistPos, 400);
   }
@@ -19624,8 +19741,30 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
           onMouseUp: selectionEnd,
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Scene, {}),
-            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bpage", ref: pageRef, onScroll: onPageScroll, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookinner", lang: "en", ref: sheetRef, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookflow", ref: contentRef }) }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bpage", ref: pageRef, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookinner", lang: "en", ref: sheetRef, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookflow", ref: contentRef, onScroll: onPageScroll }) }) }),
             /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "spine" }),
+            bound && sheetBox && !showCover && (() => {
+              const MAX = Math.max(9, Math.min(26, Math.round(sheetBox.w * 0.028)));
+              const l3 = Math.max(1, Math.round(MAX * prog));
+              const r = Math.max(1, Math.round(MAX * (1 - prog)));
+              const top = sheetBox.top + 6, h = Math.max(20, sheetBox.h - 12);
+              return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                  "div",
+                  {
+                    className: "edgestack es-left",
+                    style: { left: sheetBox.left - l3, top, width: l3, height: h }
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+                  "div",
+                  {
+                    className: "edgestack es-right",
+                    style: { left: sheetBox.left + sheetBox.w, top, width: r, height: h }
+                  }
+                )
+              ] });
+            })(),
             spread && !showCover && spreadInfo.colW > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.title : "" }),
               /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft + spreadInfo.colW + spreadInfo.gap, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.chapters[ch].title : "" }),

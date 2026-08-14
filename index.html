@@ -859,11 +859,28 @@ body {
   cursor: cell;
 }
 .bookinner h2 {
-  font-size: 1.55em;
-  letter-spacing: .4px;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--accent);
+  font-size: 1.16em;
+  font-weight: 600;
+  letter-spacing: .3px;
+  text-align: left;
+  hyphens: none;
+  margin: 1.9em 0 .5em;
+  padding-bottom: .3em;
+  break-after: avoid;
+  position: relative;
+}
+.bookinner h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 38px;
+  height: 1px;
+  background: var(--accentText);
+  opacity: .5;
+}
+.bookinner .chopen + h2 {
+  margin-top: 0;
 }
 .bookinner h3 {
   font-size: 1.06em;
@@ -18093,30 +18110,93 @@ var REGISTRY = [
 ];
 
 // reader-app/src/lib/books.js
-function parseBook(reg) {
-  if (reg.chapters && reg.chapters.length) return reg;
-  const lines = (reg.source || "").split("\n");
-  let title = reg.title;
-  const chapters = [];
+var TARGET_CHAPTER = 3400;
+var SHORT_SECTION = 1500;
+function splitSections(lines, mark, takeTitle) {
+  const out = [];
   let cur = null;
+  let title = null;
   for (const line of lines) {
-    if (line.startsWith("# ") && !cur && !chapters.length) {
+    if (takeTitle && line.startsWith("# ") && !cur && !out.length && title === null) {
       title = line.slice(2).trim();
       continue;
     }
-    if (line.startsWith("## ")) {
-      if (cur) chapters.push(cur);
-      cur = { title: line.slice(3).trim(), md: "" };
+    if (line.startsWith(mark)) {
+      if (cur) out.push(cur);
+      cur = { title: line.slice(mark.length).trim(), md: "" };
       continue;
     }
     if (cur) cur.md += line + "\n";
+    else if (line.trim()) {
+      cur = { title: null, md: line + "\n" };
+    }
   }
-  if (cur) chapters.push(cur);
-  if (!chapters.length) chapters.push({ title, md: reg.source });
+  if (cur) out.push(cur);
+  return { sections: out, title };
+}
+function groupSections(secs) {
+  const bodies = secs.filter((s) => s.md.trim().length);
+  if (secs.length <= 6) return secs;
+  const lens = bodies.map((s) => s.md.length).sort((a, b2) => a - b2);
+  const median = lens.length ? lens[Math.floor(lens.length / 2)] : 0;
+  if (median >= SHORT_SECTION) return secs;
+  const out = [];
+  let acc = null;
+  for (const s of secs) {
+    if (!acc) {
+      acc = { title: s.title, md: s.md, parts: 1 };
+      continue;
+    }
+    if (acc.md.length >= TARGET_CHAPTER) {
+      out.push(acc);
+      acc = { title: s.title, md: s.md, parts: 1 };
+      continue;
+    }
+    acc.md += (s.title ? `
+
+## ${s.title}
+
+` : "\n\n") + s.md;
+    acc.parts++;
+  }
+  if (acc) out.push(acc);
+  if (out.length > 1) {
+    const last = out[out.length - 1];
+    if (last.md.length < TARGET_CHAPTER * 0.35) {
+      const prev = out[out.length - 2];
+      prev.md += (last.title ? `
+
+## ${last.title}
+
+` : "\n\n") + last.md;
+      out.pop();
+    }
+  }
+  return out;
+}
+function parseBook(reg) {
+  if (reg.chapters && reg.chapters.length) return reg;
+  const src = reg.source || "";
+  const lines = src.split("\n");
+  let { sections, title } = splitSections(lines, "## ", true);
+  if (title == null) title = reg.title;
+  const named = sections.filter((s) => s.title);
+  if (!named.length && src.length > 6e3) {
+    const alt = splitSections(lines, "# ", false);
+    if (alt.sections.filter((s) => s.title).length > 1) {
+      sections = alt.sections.slice(1);
+      if (alt.sections[0] && alt.sections[0].title) title = alt.sections[0].title;
+    }
+  }
+  let chapters = groupSections(sections).filter((s) => s.md.trim().length || s.title);
+  if (!chapters.length) chapters = [{ title, md: src }];
   return {
     ...reg,
     title,
-    chapters: chapters.map((c) => ({ title: c.title, html: g.parse(c.md) }))
+    chapters: chapters.map((c, i) => ({
+      title: c.title || (chapters.length > 1 ? `Part ${i + 1}` : title),
+      html: g.parse(c.md)
+    }))
   };
 }
 var cache = null;

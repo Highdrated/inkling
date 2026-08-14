@@ -12,7 +12,6 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preload" as="image" href="objects.png">
 <title>Inkling</title>
 <style>/* reader-app/src/styles/app.css */
 * {
@@ -18426,8 +18425,6 @@ var SHEET = "objects.png";
 var BAND_TOP = 0.5;
 var BAND_BOT = 0.9;
 var BAND_H = BAND_BOT - BAND_TOP;
-var SHEET_W = 1400;
-var SHEET_H = 788;
 var OBJECTS = [
   { key: "candle", l: 0.132, r: 0.236, lift: 1 },
   { key: "books", l: 0.246, r: 0.371, lift: 0.86 },
@@ -18438,22 +18435,116 @@ var OBJECTS = [
   { key: "skull", l: 0.6, r: 0.746, lift: 0.88 },
   { key: "inkwell", l: 0.757, r: 0.868, lift: 0.94 }
 ];
-function styleFor(o) {
+function isBackdrop(r, g2, b2) {
+  const mx = Math.max(r, g2, b2), mn = Math.min(r, g2, b2);
+  return mx - mn <= 12 && mn >= 186;
+}
+function keyOutBackdrop(img) {
+  const w2 = img.naturalWidth, h = img.naturalHeight;
+  const cv = document.createElement("canvas");
+  cv.width = w2;
+  cv.height = h;
+  const ctx2 = cv.getContext("2d", { willReadFrequently: true });
+  ctx2.drawImage(img, 0, 0);
+  let data;
+  try {
+    data = ctx2.getImageData(0, 0, w2, h);
+  } catch (e) {
+    return null;
+  }
+  const px = data.data;
+  let clear = 0;
+  for (let i = 3; i < px.length; i += 4 * 97) {
+    if (px[i] < 240) clear++;
+  }
+  if (clear > 40) return { url: img.src, w: w2, h };
+  const seen = new Uint8Array(w2 * h);
+  const stack = [];
+  const push = (x2, y2) => {
+    if (x2 < 0 || y2 < 0 || x2 >= w2 || y2 >= h) return;
+    const i = y2 * w2 + x2;
+    if (seen[i]) return;
+    seen[i] = 1;
+    const p = i * 4;
+    if (!isBackdrop(px[p], px[p + 1], px[p + 2])) return;
+    stack.push(i);
+  };
+  for (let x2 = 0; x2 < w2; x2++) {
+    push(x2, 0);
+    push(x2, h - 1);
+  }
+  for (let y2 = 0; y2 < h; y2++) {
+    push(0, y2);
+    push(w2 - 1, y2);
+  }
+  while (stack.length) {
+    const i = stack.pop();
+    px[i * 4 + 3] = 0;
+    const x2 = i % w2, y2 = i / w2 | 0;
+    push(x2 + 1, y2);
+    push(x2 - 1, y2);
+    push(x2, y2 + 1);
+    push(x2, y2 - 1);
+  }
+  for (let y2 = 1; y2 < h - 1; y2++) {
+    for (let x2 = 1; x2 < w2 - 1; x2++) {
+      const i = y2 * w2 + x2, p = i * 4;
+      if (px[p + 3] === 0) continue;
+      const around = (px[(i - 1) * 4 + 3] === 0) + (px[(i + 1) * 4 + 3] === 0) + (px[(i - w2) * 4 + 3] === 0) + (px[(i + w2) * 4 + 3] === 0);
+      if (around >= 2 && isBackdrop(px[p], px[p + 1], px[p + 2])) px[p + 3] = 0;
+      else if (around >= 1) px[p + 3] = Math.min(px[p + 3], 205);
+    }
+  }
+  ctx2.putImageData(data, 0, 0);
+  return { url: cv.toDataURL("image/png"), w: w2, h };
+}
+var cached = null;
+var waiters = [];
+function useShelfSheet() {
+  const [sheet, setSheet] = (0, import_react.useState)(cached);
+  (0, import_react.useEffect)(() => {
+    if (cached !== null) {
+      setSheet(cached);
+      return;
+    }
+    waiters.push(setSheet);
+    if (waiters.length > 1) return;
+    const done = (v2) => {
+      cached = v2;
+      waiters.forEach((f) => f(v2));
+      waiters.length = 0;
+    };
+    const img = new Image();
+    img.onload = () => {
+      let out = null;
+      try {
+        out = keyOutBackdrop(img);
+      } catch (e) {
+        out = { url: img.src, w: img.naturalWidth, h: img.naturalHeight };
+      }
+      done(out || false);
+    };
+    img.onerror = () => {
+      console.warn("[Inkling] shelf art not found at " + SHEET + " \u2014 objects hidden");
+      done(false);
+    };
+    img.src = SHEET;
+  }, []);
+  return sheet;
+}
+function ShelfObject({ index, sheet }) {
+  if (!sheet) return null;
+  const o = OBJECTS[index % OBJECTS.length];
   const w2 = o.r - o.l;
-  const px = o.l / (1 - w2) * 100;
-  const py = BAND_TOP / (1 - BAND_H) * 100;
-  return {
-    backgroundImage: `url(${SHEET})`,
+  const style = {
+    backgroundImage: `url(${sheet.url})`,
     backgroundSize: `${1 / w2 * 100}% ${1 / BAND_H * 100}%`,
-    backgroundPosition: `${px}% ${py}%`,
+    backgroundPosition: `${o.l / (1 - w2) * 100}% ${BAND_TOP / (1 - BAND_H) * 100}%`,
     backgroundRepeat: "no-repeat",
-    aspectRatio: `${w2 * SHEET_W} / ${BAND_H * SHEET_H}`,
+    aspectRatio: `${w2 * sheet.w} / ${BAND_H * sheet.h}`,
     height: `${Math.round(o.lift * 100)}%`
   };
-}
-function ShelfObject({ index }) {
-  const o = OBJECTS[index % OBJECTS.length];
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "covwrap shobj", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "shobj-img obj-" + o.key, style: styleFor(o) }) });
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "covwrap shobj", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "shobj-img obj-" + o.key, style }) });
 }
 
 // reader-app/src/screens/Library.jsx
@@ -18472,6 +18563,22 @@ function Library({ positions, onOpen, onNotes, onSettings, toast, onBooksChanged
   const [edit, setEdit] = (0, import_react2.useState)(false);
   const [hidden, setHiddenList] = (0, import_react2.useState)([]);
   const fileRef = (0, import_react2.useRef)(null);
+  const sheet = useShelfSheet();
+  const gridRef = (0, import_react2.useRef)(null);
+  const [cols, setCols] = (0, import_react2.useState)(4);
+  (0, import_react2.useEffect)(() => {
+    const g2 = gridRef.current;
+    if (!g2 || typeof ResizeObserver === "undefined") return;
+    const read = () => {
+      const t = getComputedStyle(g2).gridTemplateColumns.trim();
+      const n = t && t !== "none" ? t.split(/\s+/).length : 4;
+      setCols((c) => c === n ? c : n);
+    };
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(g2);
+    return () => ro.disconnect();
+  }, []);
   const [myShelves, setMyShelves] = (0, import_react2.useState)([]);
   const [bookShelf, setBookShelfMap] = (0, import_react2.useState)({});
   (0, import_react2.useEffect)(() => {
@@ -18582,6 +18689,26 @@ Your notes and highlights for it are kept.`)) return;
     if (sort === "prog") list = [...list].sort((a, b2) => progress(a) - progress(b2));
     return list;
   }, [books, shelf, q2, sort, positions, edit, hidden]);
+  const slots = (0, import_react2.useMemo)(() => {
+    const c = Math.max(2, cols);
+    const useObjects = !edit && !!sheet;
+    const perRow = useObjects ? c - 1 : c;
+    const rows = Math.max(useObjects ? 3 : 2, Math.ceil(shown.length / perRow) + 1);
+    const out = [];
+    let bi = 0, oi = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let k = 0; k < c; k++) {
+        const last = k === c - 1;
+        if (useObjects && last) {
+          out.push({ kind: "obj", n: oi++ });
+          continue;
+        }
+        if (bi < shown.length) out.push({ kind: "book", b: shown[bi], n: bi++ });
+        else out.push({ kind: "gap" });
+      }
+    }
+    return out;
+  }, [shown, cols, edit, sheet]);
   function progress(b2) {
     const pos = positions[b2.id];
     if (!pos) return 0;
@@ -18636,8 +18763,11 @@ Your notes and highlights for it are kept.`)) return;
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "carrow", children: "\u276F" })
     ] }),
     edit && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editnote", children: "Tap \u25C7 to hide a book from your shelves, \u2715 to remove an imported one for good. Hidden books show here greyed out \u2014 tap \u25C6 to bring one back." }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "grid", children: [
-      shown.map((b2, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap", style: { "--i": Math.min(i, 14) }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "grid", ref: gridRef, children: slots.map((s, i) => {
+      if (s.kind === "obj") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ShelfObject, { index: s.n, sheet }, "ob" + i);
+      if (s.kind === "gap") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap filler" }, "f" + i);
+      const b2 = s.b;
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap", style: { "--i": Math.min(s.n, 14) }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
         "div",
         {
           className: "cover" + (edit && hidden.includes(b2.id) ? " isdim" : ""),
@@ -18676,7 +18806,7 @@ Your notes and highlights for it are kept.`)) return;
                 onChange: (e) => moveBook(e, b2),
                 children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "__none", children: "\u2014 original shelf \u2014" }),
-                  allShelves.filter((s) => s.id !== "all").map((s) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: s.id, children: s.label }, s.id))
+                  allShelves.filter((s2) => s2.id !== "all").map((s2) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: s2.id, children: s2.label }, s2.id))
                 ]
               }
             ),
@@ -18691,10 +18821,8 @@ Your notes and highlights for it are kept.`)) return;
             ] })
           ]
         }
-      ) }, b2.id)),
-      !edit && Array.from({ length: 3 }).map((_2, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ShelfObject, { index: i + shown.length }, "ob" + i)),
-      Array.from({ length: 6 }).map((_2, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap filler" }, "f" + i))
-    ] })
+      ) }, b2.id);
+    }) })
   ] });
 }
 

@@ -624,49 +624,6 @@ body {
   pointer-events: none;
   animation: none;
 }
-.covwrap.shobj {
-  pointer-events: none;
-  align-items: center;
-  animation-delay: calc(var(--i, 0) * 45ms);
-}
-.shobj-img {
-  width: auto;
-  max-width: 96%;
-  display: block;
-  position: relative;
-  filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .45)) drop-shadow(0 1px 1px rgba(0, 0, 0, .5));
-}
-.shobj-img::after {
-  content: "";
-  position: absolute;
-  left: 6%;
-  right: 6%;
-  bottom: -5px;
-  height: 9px;
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      ellipse at 50% 50%,
-      rgba(0, 0, 0, .5),
-      transparent 72%);
-}
-.obj-candle {
-  animation: candleflick 4.5s ease-in-out infinite;
-}
-@keyframes candleflick {
-  0%, 100% {
-    filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .45)) drop-shadow(0 -6px 16px rgba(255, 190, 90, .32));
-  }
-  45% {
-    filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .45)) drop-shadow(0 -9px 24px rgba(255, 200, 110, .5));
-  }
-  70% {
-    filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .45)) drop-shadow(0 -6px 14px rgba(255, 185, 80, .28));
-  }
-}
-.app.nomotion .obj-candle {
-  animation: none;
-}
 .cover {
   box-shadow:
     0 10px 22px rgba(0, 0, 0, .34),
@@ -4599,7 +4556,7 @@ var require_scheduler = __commonJS({
 var require_react_dom_production = __commonJS({
   "../.npm-global/lib/node_modules/react-dom/cjs/react-dom.production.js"(exports) {
     "use strict";
-    var React11 = require_react();
+    var React10 = require_react();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
       if (1 < arguments.length) {
@@ -4639,7 +4596,7 @@ var require_react_dom_production = __commonJS({
         implementation
       };
     }
-    var ReactSharedInternals = React11.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React10.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     function getCrossOriginStringAs(as, input) {
       if ("font" === as) return "";
       if ("string" === typeof input)
@@ -4775,7 +4732,7 @@ var require_react_dom_client_production = __commonJS({
   "../.npm-global/lib/node_modules/react-dom/cjs/react-dom-client.production.js"(exports) {
     "use strict";
     var Scheduler = require_scheduler();
-    var React11 = require_react();
+    var React10 = require_react();
     var ReactDOM = require_react_dom();
     function formatProdErrorMessage(code) {
       var url = "https://react.dev/errors/" + code;
@@ -4966,7 +4923,7 @@ var require_react_dom_client_production = __commonJS({
       return null;
     }
     var isArrayImpl = Array.isArray;
-    var ReactSharedInternals = React11.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+    var ReactSharedInternals = React10.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
     var sharedNotPendingObject = {
       pending: false,
@@ -16412,7 +16369,7 @@ var require_react_dom_client_production = __commonJS({
         0 === i && attemptExplicitHydrationTarget(target);
       }
     };
-    var isomorphicReactPackageVersion$jscomp$inline_1840 = React11.version;
+    var isomorphicReactPackageVersion$jscomp$inline_1840 = React10.version;
     if ("19.2.6" !== isomorphicReactPackageVersion$jscomp$inline_1840)
       throw Error(
         formatProdErrorMessage(
@@ -16842,14 +16799,14 @@ var init_epub = __esm({
 });
 
 // reader-app/src/main.jsx
-var import_react10 = __toESM(require_react(), 1);
+var import_react9 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // reader-app/src/App.jsx
-var import_react9 = __toESM(require_react(), 1);
+var import_react8 = __toESM(require_react(), 1);
 
 // reader-app/src/screens/Library.jsx
-var import_react2 = __toESM(require_react(), 1);
+var import_react = __toESM(require_react(), 1);
 
 // ../.npm-global/lib/node_modules/marked/lib/marked.esm.js
 function z() {
@@ -18418,137 +18375,8 @@ function exportNotesMd(book, notes, highlights) {
   return lines.join("\n");
 }
 
-// reader-app/src/components/ShelfObjects.jsx
-var import_react = __toESM(require_react(), 1);
-var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
-var SHEET = "objects.png";
-var BAND_TOP = 0.5;
-var BAND_BOT = 0.9;
-var BAND_H = BAND_BOT - BAND_TOP;
-var OBJECTS = [
-  { key: "candle", l: 0.132, r: 0.236, lift: 1 },
-  { key: "books", l: 0.246, r: 0.371, lift: 0.86 },
-  { key: "globe", l: 0.493, r: 0.621, lift: 0.98 },
-  { key: "horse", l: 0.021, r: 0.143, lift: 0.92 },
-  { key: "bust", l: 0.389, r: 0.479, lift: 0.96 },
-  { key: "clock", l: 0.886, r: 0.971, lift: 0.9 },
-  { key: "skull", l: 0.6, r: 0.746, lift: 0.88 },
-  { key: "inkwell", l: 0.757, r: 0.868, lift: 0.94 }
-];
-function isBackdrop(r, g2, b2) {
-  const mx = Math.max(r, g2, b2), mn = Math.min(r, g2, b2);
-  return mx - mn <= 12 && mn >= 186;
-}
-function keyOutBackdrop(img) {
-  const w2 = img.naturalWidth, h = img.naturalHeight;
-  const cv = document.createElement("canvas");
-  cv.width = w2;
-  cv.height = h;
-  const ctx2 = cv.getContext("2d", { willReadFrequently: true });
-  ctx2.drawImage(img, 0, 0);
-  let data;
-  try {
-    data = ctx2.getImageData(0, 0, w2, h);
-  } catch (e) {
-    return null;
-  }
-  const px = data.data;
-  let clear = 0;
-  for (let i = 3; i < px.length; i += 4 * 97) {
-    if (px[i] < 240) clear++;
-  }
-  if (clear > 40) return { url: img.src, w: w2, h };
-  const seen = new Uint8Array(w2 * h);
-  const stack = [];
-  const push = (x2, y2) => {
-    if (x2 < 0 || y2 < 0 || x2 >= w2 || y2 >= h) return;
-    const i = y2 * w2 + x2;
-    if (seen[i]) return;
-    seen[i] = 1;
-    const p = i * 4;
-    if (!isBackdrop(px[p], px[p + 1], px[p + 2])) return;
-    stack.push(i);
-  };
-  for (let x2 = 0; x2 < w2; x2++) {
-    push(x2, 0);
-    push(x2, h - 1);
-  }
-  for (let y2 = 0; y2 < h; y2++) {
-    push(0, y2);
-    push(w2 - 1, y2);
-  }
-  while (stack.length) {
-    const i = stack.pop();
-    px[i * 4 + 3] = 0;
-    const x2 = i % w2, y2 = i / w2 | 0;
-    push(x2 + 1, y2);
-    push(x2 - 1, y2);
-    push(x2, y2 + 1);
-    push(x2, y2 - 1);
-  }
-  for (let y2 = 1; y2 < h - 1; y2++) {
-    for (let x2 = 1; x2 < w2 - 1; x2++) {
-      const i = y2 * w2 + x2, p = i * 4;
-      if (px[p + 3] === 0) continue;
-      const around = (px[(i - 1) * 4 + 3] === 0) + (px[(i + 1) * 4 + 3] === 0) + (px[(i - w2) * 4 + 3] === 0) + (px[(i + w2) * 4 + 3] === 0);
-      if (around >= 2 && isBackdrop(px[p], px[p + 1], px[p + 2])) px[p + 3] = 0;
-      else if (around >= 1) px[p + 3] = Math.min(px[p + 3], 205);
-    }
-  }
-  ctx2.putImageData(data, 0, 0);
-  return { url: cv.toDataURL("image/png"), w: w2, h };
-}
-var cached = null;
-var waiters = [];
-function useShelfSheet() {
-  const [sheet, setSheet] = (0, import_react.useState)(cached);
-  (0, import_react.useEffect)(() => {
-    if (cached !== null) {
-      setSheet(cached);
-      return;
-    }
-    waiters.push(setSheet);
-    if (waiters.length > 1) return;
-    const done = (v2) => {
-      cached = v2;
-      waiters.forEach((f) => f(v2));
-      waiters.length = 0;
-    };
-    const img = new Image();
-    img.onload = () => {
-      let out = null;
-      try {
-        out = keyOutBackdrop(img);
-      } catch (e) {
-        out = { url: img.src, w: img.naturalWidth, h: img.naturalHeight };
-      }
-      done(out || false);
-    };
-    img.onerror = () => {
-      console.warn("[Inkling] shelf art not found at " + SHEET + " \u2014 objects hidden");
-      done(false);
-    };
-    img.src = SHEET;
-  }, []);
-  return sheet;
-}
-function ShelfObject({ index, sheet }) {
-  if (!sheet) return null;
-  const o = OBJECTS[index % OBJECTS.length];
-  const w2 = o.r - o.l;
-  const style = {
-    backgroundImage: `url(${sheet.url})`,
-    backgroundSize: `${1 / w2 * 100}% ${1 / BAND_H * 100}%`,
-    backgroundPosition: `${o.l / (1 - w2) * 100}% ${BAND_TOP / (1 - BAND_H) * 100}%`,
-    backgroundRepeat: "no-repeat",
-    aspectRatio: `${w2 * sheet.w} / ${BAND_H * sheet.h}`,
-    height: `${Math.round(o.lift * 100)}%`
-  };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "covwrap shobj", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "shobj-img obj-" + o.key, style }) });
-}
-
 // reader-app/src/screens/Library.jsx
-var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
 var SHELVES = [
   { id: "all", label: "All" },
   { id: "books", label: "Books" },
@@ -18557,16 +18385,15 @@ var SHELVES = [
 ];
 function Library({ positions, onOpen, onNotes, onSettings, toast, onBooksChanged, cs }) {
   const books = getBooks();
-  const [shelf, setShelf] = (0, import_react2.useState)("all");
-  const [q2, setQ] = (0, import_react2.useState)("");
-  const [sort, setSort] = (0, import_react2.useState)("recent");
-  const [edit, setEdit] = (0, import_react2.useState)(false);
-  const [hidden, setHiddenList] = (0, import_react2.useState)([]);
-  const fileRef = (0, import_react2.useRef)(null);
-  const sheet = useShelfSheet();
-  const gridRef = (0, import_react2.useRef)(null);
-  const [cols, setCols] = (0, import_react2.useState)(4);
-  (0, import_react2.useEffect)(() => {
+  const [shelf, setShelf] = (0, import_react.useState)("all");
+  const [q2, setQ] = (0, import_react.useState)("");
+  const [sort, setSort] = (0, import_react.useState)("recent");
+  const [edit, setEdit] = (0, import_react.useState)(false);
+  const [hidden, setHiddenList] = (0, import_react.useState)([]);
+  const fileRef = (0, import_react.useRef)(null);
+  const gridRef = (0, import_react.useRef)(null);
+  const [cols, setCols] = (0, import_react.useState)(4);
+  (0, import_react.useEffect)(() => {
     const g2 = gridRef.current;
     if (!g2 || typeof ResizeObserver === "undefined") return;
     const read = () => {
@@ -18579,9 +18406,9 @@ function Library({ positions, onOpen, onNotes, onSettings, toast, onBooksChanged
     ro.observe(g2);
     return () => ro.disconnect();
   }, []);
-  const [myShelves, setMyShelves] = (0, import_react2.useState)([]);
-  const [bookShelf, setBookShelfMap] = (0, import_react2.useState)({});
-  (0, import_react2.useEffect)(() => {
+  const [myShelves, setMyShelves] = (0, import_react.useState)([]);
+  const [bookShelf, setBookShelfMap] = (0, import_react.useState)({});
+  (0, import_react.useEffect)(() => {
     loadHidden().then(setHiddenList);
     loadShelves().then(setMyShelves);
     loadBookShelf().then(setBookShelfMap);
@@ -18681,7 +18508,7 @@ Your notes and highlights for it are kept.`)) return;
     onBooksChanged();
     toast(`"${title}" added to your library`);
   }
-  const shown = (0, import_react2.useMemo)(() => {
+  const shown = (0, import_react.useMemo)(() => {
     let list = books.filter(
       (b2) => (shelf === "all" || shelfOf(b2) === shelf) && (!q2 || b2.title.toLowerCase().includes(q2.toLowerCase())) && (edit || !hidden.includes(b2.id))
     );
@@ -18689,26 +18516,16 @@ Your notes and highlights for it are kept.`)) return;
     if (sort === "prog") list = [...list].sort((a, b2) => progress(a) - progress(b2));
     return list;
   }, [books, shelf, q2, sort, positions, edit, hidden]);
-  const slots = (0, import_react2.useMemo)(() => {
+  const slots = (0, import_react.useMemo)(() => {
     const c = Math.max(2, cols);
-    const useObjects = !edit && !!sheet;
-    const perRow = useObjects ? c - 1 : c;
-    const rows = Math.max(useObjects ? 3 : 2, Math.ceil(shown.length / perRow) + 1);
+    const rows = Math.max(2, Math.ceil(shown.length / c) + 1);
     const out = [];
-    let bi = 0, oi = 0;
-    for (let r = 0; r < rows; r++) {
-      for (let k = 0; k < c; k++) {
-        const last = k === c - 1;
-        if (useObjects && last) {
-          out.push({ kind: "obj", n: oi++ });
-          continue;
-        }
-        if (bi < shown.length) out.push({ kind: "book", b: shown[bi], n: bi++ });
-        else out.push({ kind: "gap" });
-      }
+    for (let i = 0; i < rows * c; i++) {
+      if (i < shown.length) out.push({ kind: "book", b: shown[i], n: i });
+      else out.push({ kind: "gap" });
     }
     return out;
-  }, [shown, cols, edit, sheet]);
+  }, [shown, cols]);
   function progress(b2) {
     const pos = positions[b2.id];
     if (!pos) return 0;
@@ -18721,53 +18538,52 @@ Your notes and highlights for it are kept.`)) return;
     const part = h < 6 ? "Still up" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
     return `${part}, Kaatje`;
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "screen library", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "libhead", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { children: "Library" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "greet", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: greeting() }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("br", {}),
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "screen library", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "libhead", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: "Library" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { className: "greet", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: greeting() }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
         current && curPos ? `${current.chapters.length - curPos.chapter - 1} chapters left in ${current.title}` : `${shown.length} ${shown.length === 1 ? "book" : "books"} on your shelves`
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "importbtn", onClick: () => fileRef.current && fileRef.current.click(), children: "\uFF0B Import file" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { ref: fileRef, type: "file", accept: ".epub,.md,.markdown,.txt", style: { display: "none" }, onChange: importFile }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "navbtn" + (edit ? " on" : ""), onClick: () => setEdit((v2) => !v2), children: edit ? "Done" : "Organise" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "navbtn", onClick: onNotes, children: "Notes" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "importbtn", onClick: () => fileRef.current && fileRef.current.click(), children: "\uFF0B Import file" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { ref: fileRef, type: "file", accept: ".epub,.md,.markdown,.txt", style: { display: "none" }, onChange: importFile }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "navbtn" + (edit ? " on" : ""), onClick: () => setEdit((v2) => !v2), children: edit ? "Done" : "Organise" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "navbtn", onClick: onNotes, children: "Notes" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "libtools", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "shelves", children: [
-        allShelves.map((s) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "shelf" + (shelf === s.id ? " active" : ""), onClick: () => setShelf(s.id), children: s.label }, s.id)),
-        edit && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "shelf newshelf", onClick: newShelf, children: "\uFF0B New shelf" }),
-        edit && myShelves.some((s) => s.id === shelf) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "shelf dropshelf", onClick: dropShelf, children: "\u2715 Delete shelf" })
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "libtools", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "shelves", children: [
+        allShelves.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "shelf" + (shelf === s.id ? " active" : ""), onClick: () => setShelf(s.id), children: s.label }, s.id)),
+        edit && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "shelf newshelf", onClick: newShelf, children: "\uFF0B New shelf" }),
+        edit && myShelves.some((s) => s.id === shelf) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "shelf dropshelf", onClick: dropShelf, children: "\u2715 Delete shelf" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "libsearch", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { placeholder: "Search titles", value: q2, onChange: (e) => setQ(e.target.value) }),
-        [["recent", "Recent"], ["az", "A\u2013Z"], ["prog", "Unfinished"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "sortbtn" + (sort === id ? " active" : ""), onClick: () => setSort(id), children: label }, id))
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "libsearch", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { placeholder: "Search titles", value: q2, onChange: (e) => setQ(e.target.value) }),
+        [["recent", "Recent"], ["az", "A\u2013Z"], ["prog", "Unfinished"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "sortbtn" + (sort === id ? " active" : ""), onClick: () => setSort(id), children: label }, id))
       ] })
     ] }),
-    current && curPos && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "continue", onClick: () => onOpen(current.id), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "cbar", "data-cs": cs, style: coverStyle(current) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "ctext", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "ckicker", children: "Carry on reading" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: current.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
+    current && curPos && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "continue", onClick: () => onOpen(current.id), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "cbar", "data-cs": cs, style: coverStyle(current) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "ctext", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "ckicker", children: "Carry on reading" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("b", { children: current.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
           current.chapters[curPos.chapter]?.title,
           " \xB7 chapter ",
           curPos.chapter + 1,
           " of ",
           current.chapters.length
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "cprog", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("i", { style: { width: progress(current) + "%" } }) })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "cprog", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { width: progress(current) + "%" } }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "carrow", children: "\u276F" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "carrow", children: "\u276F" })
     ] }),
-    edit && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "editnote", children: "Tap \u25C7 to hide a book from your shelves, \u2715 to remove an imported one for good. Hidden books show here greyed out \u2014 tap \u25C6 to bring one back." }),
-    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "grid", ref: gridRef, children: slots.map((s, i) => {
-      if (s.kind === "obj") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ShelfObject, { index: s.n, sheet }, "ob" + i);
-      if (s.kind === "gap") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap filler" }, "f" + i);
+    edit && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "editnote", children: "Tap \u25C7 to hide a book from your shelves, \u2715 to remove an imported one for good. Hidden books show here greyed out \u2014 tap \u25C6 to bring one back." }),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid", ref: gridRef, children: slots.map((s, i) => {
+      if (s.kind === "gap") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "covwrap filler" }, "f" + i);
       const b2 = s.b;
-      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "covwrap", style: { "--i": Math.min(s.n, 14) }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "covwrap", style: { "--i": Math.min(s.n, 14) }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
         "div",
         {
           className: "cover" + (edit && hidden.includes(b2.id) ? " isdim" : ""),
@@ -18777,8 +18593,8 @@ Your notes and highlights for it are kept.`)) return;
             if (!edit) onOpen(b2.id);
           },
           children: [
-            edit && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "covedit", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            edit && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "covedit", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                 "button",
                 {
                   className: "cedit",
@@ -18787,7 +18603,7 @@ Your notes and highlights for it are kept.`)) return;
                   children: hidden.includes(b2.id) ? "\u25C6" : "\u25C7"
                 }
               ),
-              b2.id.startsWith("imp") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+              b2.id.startsWith("imp") && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                 "button",
                 {
                   className: "cedit del",
@@ -18797,7 +18613,7 @@ Your notes and highlights for it are kept.`)) return;
                 }
               )
             ] }),
-            edit && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+            edit && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
               "select",
               {
                 className: "cshelf",
@@ -18805,19 +18621,19 @@ Your notes and highlights for it are kept.`)) return;
                 onClick: (e) => e.stopPropagation(),
                 onChange: (e) => moveBook(e, b2),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "__none", children: "\u2014 original shelf \u2014" }),
-                  allShelves.filter((s2) => s2.id !== "all").map((s2) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: s2.id, children: s2.label }, s2.id))
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", { value: "__none", children: "\u2014 original shelf \u2014" }),
+                  allShelves.filter((s2) => s2.id !== "all").map((s2) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", { value: s2.id, children: s2.label }, s2.id))
                 ]
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "genre", children: b2.genre }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { children: b2.title })
+            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "genre", children: b2.genre }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: b2.title })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "mono", children: monogram(b2.title) }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("small", { children: positions[b2.id] ? `ch. ${positions[b2.id].chapter + 1} of ${b2.chapters.length}` : "not started" }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "prog", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("i", { style: { width: progress(b2) + "%" } }) })
+            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mono", children: monogram(b2.title) }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: positions[b2.id] ? `ch. ${positions[b2.id].chapter + 1} of ${b2.chapters.length}` : "not started" }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "prog", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { width: progress(b2) + "%" } }) })
             ] })
           ]
         }
@@ -18827,7 +18643,7 @@ Your notes and highlights for it are kept.`)) return;
 }
 
 // reader-app/src/screens/Reader.jsx
-var import_react6 = __toESM(require_react(), 1);
+var import_react5 = __toESM(require_react(), 1);
 
 // reader-app/src/lib/highlights.js
 function occurrenceBefore(container, range, exact) {
@@ -18885,35 +18701,35 @@ function wrapOccurrence(container, hl) {
 }
 
 // reader-app/src/components/NotePanel.jsx
-var import_react4 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 
 // reader-app/src/components/Icons.jsx
-var import_react3 = __toESM(require_react(), 1);
-var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
-var PenIcon = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinejoin: "round", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M12.6 3.9l3.5 3.5L7.2 16.3l-4.5 1 1-4.5z" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M10.9 5.6l3.5 3.5" })
+var import_react2 = __toESM(require_react(), 1);
+var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
+var PenIcon = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinejoin: "round", children: [
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12.6 3.9l3.5 3.5L7.2 16.3l-4.5 1 1-4.5z" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M10.9 5.6l3.5 3.5" })
 ] }) });
-var HighlighterIcon = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("g", { fill: "none", stroke: "currentColor", strokeLinejoin: "round", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { strokeWidth: "1.7", d: "M11.5 3.5l5 5-6 6H7v-3.5z" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { strokeWidth: "2.6", d: "M4 17.5h12" })
+var HighlighterIcon = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "none", stroke: "currentColor", strokeLinejoin: "round", children: [
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { strokeWidth: "1.7", d: "M11.5 3.5l5 5-6 6H7v-3.5z" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { strokeWidth: "2.6", d: "M4 17.5h12" })
 ] }) });
-var EraserIcon = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinejoin: "round", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M3.5 13l6.5-6.5 5 5L11 15.5H7z" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M7 8.5l5 5" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M11 15.5h5.5" })
+var EraserIcon = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinejoin: "round", children: [
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M3.5 13l6.5-6.5 5 5L11 15.5H7z" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M7 8.5l5 5" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M11 15.5h5.5" })
 ] }) });
-var UndoIcon = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M5.5 8.5a5.5 5.5 0 1 1-0.8 4.5" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M5.5 4.5v4h4" })
+var UndoIcon = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { viewBox: "0 0 20 20", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M5.5 8.5a5.5 5.5 0 1 1-0.8 4.5" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M5.5 4.5v4h4" })
 ] }) });
-var SearchIcon = () => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("svg", { width: "15", height: "15", viewBox: "0 0 15 15", children: [
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: "6.2", cy: "6.2", r: "4.4", fill: "none", stroke: "currentColor", strokeWidth: "1.7" }),
-  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("line", { x1: "9.6", y1: "9.6", x2: "13.6", y2: "13.6", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round" })
+var SearchIcon = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { width: "15", height: "15", viewBox: "0 0 15 15", children: [
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "6.2", cy: "6.2", r: "4.4", fill: "none", stroke: "currentColor", strokeWidth: "1.7" }),
+  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("line", { x1: "9.6", y1: "9.6", x2: "13.6", y2: "13.6", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round" })
 ] });
 
 // reader-app/src/components/NotePanel.jsx
-var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
 var PEN_COLORS = ["auto", "#c05b3c", "#3c6e71"];
 var PEN_SIZES = [1.6, 2.4, 4.5];
 var HL_CHOICES = ["theme", "A", "B", "C"];
@@ -18933,19 +18749,19 @@ function NotePanel({
   pageLabel,
   toast
 }) {
-  const canvasRef = (0, import_react4.useRef)(null);
-  const wrapRef = (0, import_react4.useRef)(null);
-  const strokesRef = (0, import_react4.useRef)([]);
-  const curRef = (0, import_react4.useRef)(null);
-  const [wrapH, setWrapH] = (0, import_react4.useState)(220);
-  const [penColor, setPenColor] = (0, import_react4.useState)("auto");
-  const [penSize, setPenSize] = (0, import_react4.useState)(2.4);
-  const [penPop, setPenPop] = (0, import_react4.useState)(false);
-  const [hlPop, setHlPop] = (0, import_react4.useState)(false);
-  const [palm, setPalm] = (0, import_react4.useState)(false);
-  const [preview, setPreview] = (0, import_react4.useState)(false);
-  const [previewText, setPreviewText] = (0, import_react4.useState)("");
-  const palmTimer = (0, import_react4.useRef)(null);
+  const canvasRef = (0, import_react3.useRef)(null);
+  const wrapRef = (0, import_react3.useRef)(null);
+  const strokesRef = (0, import_react3.useRef)([]);
+  const curRef = (0, import_react3.useRef)(null);
+  const [wrapH, setWrapH] = (0, import_react3.useState)(220);
+  const [penColor, setPenColor] = (0, import_react3.useState)("auto");
+  const [penSize, setPenSize] = (0, import_react3.useState)(2.4);
+  const [penPop, setPenPop] = (0, import_react3.useState)(false);
+  const [hlPop, setHlPop] = (0, import_react3.useState)(false);
+  const [palm, setPalm] = (0, import_react3.useState)(false);
+  const [preview, setPreview] = (0, import_react3.useState)(false);
+  const [previewText, setPreviewText] = (0, import_react3.useState)("");
+  const palmTimer = (0, import_react3.useRef)(null);
   function resolvePen(c) {
     if (c !== "auto") return c;
     return getComputedStyle(document.querySelector(".app")).getPropertyValue("--ink").trim();
@@ -18978,7 +18794,7 @@ function NotePanel({
     ctx2.setTransform(2, 0, 0, 2, 0, 0);
     redraw();
   }
-  (0, import_react4.useEffect)(() => {
+  (0, import_react3.useEffect)(() => {
     sizeCanvas();
     const t = setTimeout(sizeCanvas, 380);
     window.addEventListener("resize", sizeCanvas);
@@ -19060,18 +18876,18 @@ function NotePanel({
     redraw();
     setPreview(false);
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "np-in", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "nphead", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("b", { children: "Notes" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "pg", children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "np-in", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "nphead", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: "Notes" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "pg", children: [
         "\xB7 ",
         pageLabel
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "langs", children: ["NL", "EN"].map((l3) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: lang === l3 ? "active" : "", onClick: () => setLang(l3), children: l3 }, l3)) })
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "langs", children: ["NL", "EN"].map((l3) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: lang === l3 ? "active" : "", onClick: () => setLang(l3), children: l3 }, l3)) })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "nptools", children: [
-      penPop && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "toolpop show", children: [
-        PEN_COLORS.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "nptools", children: [
+      penPop && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "toolpop show", children: [
+        PEN_COLORS.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
           "div",
           {
             className: "opt" + (penColor === c ? " sel" : ""),
@@ -19080,10 +18896,10 @@ function NotePanel({
           },
           c
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "sep" }),
-        PEN_SIZES.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "opt size" + (penSize === s ? " sel" : ""), style: { "--i": i + 3 }, onClick: () => setPenSize(s), children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", { style: { width: 3 + s * 2, height: 3 + s * 2 } }) }, s))
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "sep" }),
+        PEN_SIZES.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "opt size" + (penSize === s ? " sel" : ""), style: { "--i": i + 3 }, onClick: () => setPenSize(s), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("i", { style: { width: 3 + s * 2, height: 3 + s * 2 } }) }, s))
       ] }),
-      hlPop && /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "toolpop show", children: HL_CHOICES.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      hlPop && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "toolpop show", children: HL_CHOICES.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "div",
         {
           className: "opt" + (hlChoice === c ? " sel" : ""),
@@ -19092,7 +18908,7 @@ function NotePanel({
         },
         c
       )) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
           className: "tool" + (tool === "pen" ? " active" : ""),
@@ -19106,10 +18922,10 @@ function NotePanel({
               setPenPop(false);
             }
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PenIcon, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PenIcon, {})
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
           className: "tool" + (tool === "hl" ? " active" : ""),
@@ -19123,10 +18939,10 @@ function NotePanel({
               setHlPop(false);
             }
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(HighlighterIcon, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(HighlighterIcon, {})
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
           className: "tool" + (tool === "erase" ? " active" : ""),
@@ -19136,19 +18952,19 @@ function NotePanel({
             setPenPop(false);
             setHlPop(false);
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(EraserIcon, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(EraserIcon, {})
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "tool", title: "Undo stroke", onClick: undo, children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(UndoIcon, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "toggle" + (convert ? " on" : ""), onClick: () => setConvert(!convert), children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("span", { children: "Convert to text" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "switch", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("i", {}) })
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "tool", title: "Undo stroke", onClick: undo, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(UndoIcon, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "toggle" + (convert ? " on" : ""), onClick: () => setConvert(!convert), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "Convert to text" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "switch", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("i", {}) })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "canvaswrap", ref: wrapRef, style: { height: wrapH }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("canvas", { ref: canvasRef, onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerLeave: up }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "palmtoast" + (palm ? " show" : ""), children: "palm ignored" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "canvaswrap", ref: wrapRef, style: { height: wrapH }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("canvas", { ref: canvasRef, onPointerDown: down, onPointerMove: move, onPointerUp: up, onPointerLeave: up }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "palmtoast" + (palm ? " show" : ""), children: "palm ignored" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "button",
         {
           className: "extbtn",
@@ -19158,26 +18974,26 @@ function NotePanel({
         }
       )
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "npactions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { onClick: clear, children: "Clear" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "save", onClick: saveNote, children: "Save note" })
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "npactions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: clear, children: "Clear" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "save", onClick: saveNote, children: "Save note" })
     ] }),
-    preview && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "preview show", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "plabel", children: "Transcribe your note \u2014 ML Kit will do this automatically later" }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("textarea", { value: previewText, onChange: (e) => setPreviewText(e.target.value), autoFocus: true }),
-      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { onClick: () => setPreview(false), children: "Keep writing" }),
-        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("button", { className: "ok", onClick: commitText, children: "Save text" })
+    preview && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "preview show", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "plabel", children: "Transcribe your note \u2014 ML Kit will do this automatically later" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("textarea", { value: previewText, onChange: (e) => setPreviewText(e.target.value), autoFocus: true }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: () => setPreview(false), children: "Keep writing" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "ok", onClick: commitText, children: "Save text" })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "notecards", children: notes.map((n) => /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(
+    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "notecards", children: notes.map((n) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
       "div",
       {
         className: "card" + (n.type === "quote" ? " quote" : ""),
         onClick: () => n.hlId && onCardJump(n),
         children: [
-          n.type === "quote" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "tag", children: [
+          n.type === "quote" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "tag", children: [
               "\u25AC Highlight \xB7 ",
               n.pageLabel
             ] }),
@@ -19185,8 +19001,8 @@ function NotePanel({
             n.content,
             '"'
           ] }),
-          n.type === "text" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "tag", children: [
+          n.type === "text" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "tag", children: [
               "\u25B8 Note \xB7 ",
               n.lang,
               " \xB7 ",
@@ -19194,12 +19010,12 @@ function NotePanel({
             ] }),
             n.content
           ] }),
-          n.type === "ink" && /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("span", { className: "tag", children: [
+          n.type === "ink" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "tag", children: [
               "\u25AA Ink \xB7 ",
               n.pageLabel
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("img", { src: n.img, alt: "handwritten note" })
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: n.img, alt: "handwritten note" })
           ] })
         ]
       },
@@ -19209,86 +19025,86 @@ function NotePanel({
 }
 
 // reader-app/src/components/Scene.jsx
-var import_react5 = __toESM(require_react(), 1);
-var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
+var import_react4 = __toESM(require_react(), 1);
+var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
 function Scene() {
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "scene", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "amb amb-dark", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "vignette" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "candle", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "cglow" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "flame" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "wax w1" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "wax w2" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "cbody" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "dish" })
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "scene", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "amb amb-dark", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "vignette" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "candle", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "cglow" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "flame" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "wax w1" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "wax w2" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "cbody" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "dish" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "mote m1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "mote m2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "mote m3" })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "mote m1" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "mote m2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "mote m3" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "amb amb-forest", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "dapple d1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "dapple d2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "fleaf" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "amb amb-forest", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "dapple d1" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "dapple d2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "fleaf" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "amb amb-pastel", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "blob b1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "blob b2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "blob b3" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "cat", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "cattail" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "catbody" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "cathead" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "catear" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "amb amb-pastel", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "blob b1" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "blob b2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "blob b3" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "cat", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "cattail" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "catbody" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "cathead" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "catear" })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "amb amb-airy", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "sunbeam" }) }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pgsc pg-egypt", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "evig" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "emote em1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "emote em2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "emote em3" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "amb amb-airy", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "sunbeam" }) }),
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "pgsc pg-egypt", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "evig" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "emote em1" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "emote em2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "emote em3" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pgsc pg-parchment", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pmat", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pmattool" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pwin" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pglow" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pshelf" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pbook pb1" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pbook pb2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pbook pb3" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pbook pb4" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "pbook pb5" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "lantern", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "chain" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "lampbody" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "langlow" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "pgsc pg-parchment", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pmat", children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pmattool" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pwin" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pglow" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pshelf" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pbook pb1" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pbook pb2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pbook pb3" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pbook pb4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "pbook pb5" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "lantern", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "chain" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "lampbody" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "langlow" })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pgsc pg-paper", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "leafsh" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "cupwrap", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "ring" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "steam s1" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "steam s2" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "cupbody" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "pgsc pg-paper", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "leafsh" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "cupwrap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "ring" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "steam s1" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "steam s2" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "cupbody" })
       ] })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pgsc pg-type", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "deskgrain" }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "mat", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "matstitch" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "matstain" }),
-        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "matsheen" })
+    /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "pgsc pg-type", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "deskgrain" }),
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)("div", { className: "mat", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "matstitch" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "matstain" }),
+        /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "matsheen" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "desklamp" })
+      /* @__PURE__ */ (0, import_jsx_runtime4.jsx)("div", { className: "desklamp" })
     ] })
   ] });
 }
 
 // reader-app/src/screens/Reader.jsx
-var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
+var import_jsx_runtime5 = __toESM(require_jsx_runtime(), 1);
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
@@ -19301,44 +19117,44 @@ function seededPos(seed) {
 }
 function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
   const book = getBook(bookId);
-  const [ch, setCh] = (0, import_react6.useState)(0);
-  const [noteMode, setNoteMode] = (0, import_react6.useState)(false);
-  const [immersive, setImmersive] = (0, import_react6.useState)(false);
-  const [tool, setTool] = (0, import_react6.useState)("pen");
-  const [hlChoice, setHlChoice] = (0, import_react6.useState)("theme");
-  const [lang, setLang] = (0, import_react6.useState)(settings.lang || "NL");
-  const [convert, setConvert] = (0, import_react6.useState)(true);
-  const [notes, setNotes] = (0, import_react6.useState)([]);
-  const [highlights, setHighlights] = (0, import_react6.useState)([]);
-  const [tocOpen, setTocOpen] = (0, import_react6.useState)(false);
-  const [searchOpen, setSearchOpen] = (0, import_react6.useState)(false);
-  const [popout, setPopout] = (0, import_react6.useState)(false);
-  const [selPop, setSelPop] = (0, import_react6.useState)(null);
-  const [hint, setHint] = (0, import_react6.useState)(false);
-  const contentRef = (0, import_react6.useRef)(null);
-  const sheetRef = (0, import_react6.useRef)(null);
-  const paneRef = (0, import_react6.useRef)(null);
-  const pageRef = (0, import_react6.useRef)(null);
-  const dirRef = (0, import_react6.useRef)(0);
-  const savedRange = (0, import_react6.useRef)(null);
-  const ready2 = (0, import_react6.useRef)(false);
-  const appliedRef = (0, import_react6.useRef)(/* @__PURE__ */ new Set());
-  const hlRef = (0, import_react6.useRef)([]);
-  const posRef = (0, import_react6.useRef)({ chapter: 0, scroll: {} });
-  const scrollTimer = (0, import_react6.useRef)(null);
-  const drag = (0, import_react6.useRef)({ active: false, follow: false, sx: 0, sy: 0, dx: 0, suppress: false });
-  const chRef = (0, import_react6.useRef)(0);
-  const lastDrag = (0, import_react6.useRef)(0);
+  const [ch, setCh] = (0, import_react5.useState)(0);
+  const [noteMode, setNoteMode] = (0, import_react5.useState)(false);
+  const [immersive, setImmersive] = (0, import_react5.useState)(false);
+  const [tool, setTool] = (0, import_react5.useState)("pen");
+  const [hlChoice, setHlChoice] = (0, import_react5.useState)("theme");
+  const [lang, setLang] = (0, import_react5.useState)(settings.lang || "NL");
+  const [convert, setConvert] = (0, import_react5.useState)(true);
+  const [notes, setNotes] = (0, import_react5.useState)([]);
+  const [highlights, setHighlights] = (0, import_react5.useState)([]);
+  const [tocOpen, setTocOpen] = (0, import_react5.useState)(false);
+  const [searchOpen, setSearchOpen] = (0, import_react5.useState)(false);
+  const [popout, setPopout] = (0, import_react5.useState)(false);
+  const [selPop, setSelPop] = (0, import_react5.useState)(null);
+  const [hint, setHint] = (0, import_react5.useState)(false);
+  const contentRef = (0, import_react5.useRef)(null);
+  const sheetRef = (0, import_react5.useRef)(null);
+  const paneRef = (0, import_react5.useRef)(null);
+  const pageRef = (0, import_react5.useRef)(null);
+  const dirRef = (0, import_react5.useRef)(0);
+  const savedRange = (0, import_react5.useRef)(null);
+  const ready2 = (0, import_react5.useRef)(false);
+  const appliedRef = (0, import_react5.useRef)(/* @__PURE__ */ new Set());
+  const hlRef = (0, import_react5.useRef)([]);
+  const posRef = (0, import_react5.useRef)({ chapter: 0, scroll: {} });
+  const scrollTimer = (0, import_react5.useRef)(null);
+  const drag = (0, import_react5.useRef)({ active: false, follow: false, sx: 0, sy: 0, dx: 0, suppress: false });
+  const chRef = (0, import_react5.useRef)(0);
+  const lastDrag = (0, import_react5.useRef)(0);
   const turnMode = settings.pageTurn || "slide";
   const lifted = settings.pageStyle === "type";
   const loose = settings.pageStyle === "papyrus";
   const stiff = settings.pageStyle === "parchment";
   const spread = layout === "spread";
   const chapterLabel = `Chapter ${ch + 1} of ${book.chapters.length}`;
-  const [showCover, setShowCover] = (0, import_react6.useState)(false);
-  const [coverOpening, setCoverOpening] = (0, import_react6.useState)(false);
-  const [coverRect, setCoverRect] = (0, import_react6.useState)(null);
-  const [coverShut, setCoverShut] = (0, import_react6.useState)(false);
+  const [showCover, setShowCover] = (0, import_react5.useState)(false);
+  const [coverOpening, setCoverOpening] = (0, import_react5.useState)(false);
+  const [coverRect, setCoverRect] = (0, import_react5.useState)(null);
+  const [coverShut, setCoverShut] = (0, import_react5.useState)(false);
   function closeBook() {
     if (showCover) return;
     persistPos();
@@ -19348,7 +19164,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     setShowCover(true);
     setTimeout(() => setCoverShut(false), 900);
   }
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     if (!showCover) return;
     let raf = 0, n = 0;
     const tick = () => {
@@ -19380,10 +19196,10 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [showCover, spread]);
-  const spreadRef = (0, import_react6.useRef)({ idx: 0, count: 1, w: 0 });
-  const [spreadInfo, setSpreadInfo] = (0, import_react6.useState)({ idx: 0, count: 1, colW: 0, gap: 0, boxLeft: 0 });
-  const [sheetBox, setSheetBox] = (0, import_react6.useState)(null);
-  const [prog, setProg] = (0, import_react6.useState)(0);
+  const spreadRef = (0, import_react5.useRef)({ idx: 0, count: 1, w: 0 });
+  const [spreadInfo, setSpreadInfo] = (0, import_react5.useState)({ idx: 0, count: 1, colW: 0, gap: 0, boxLeft: 0 });
+  const [sheetBox, setSheetBox] = (0, import_react5.useState)(null);
+  const [prog, setProg] = (0, import_react5.useState)(0);
   const bound = settings.pageStyle === "paper" || settings.pageStyle === "parchment";
   function readProgress() {
     const n = book.chapters.length;
@@ -19412,7 +19228,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     });
     setProg(readProgress());
   }
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     if (!bound) {
       setSheetBox(null);
       return;
@@ -19430,9 +19246,9 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       window.removeEventListener("resize", onR);
     };
   }, [bound, spread, ch, bookId, settings.fontSize, settings.lineHeight, settings.pageStyle]);
-  const pendingLastRef = (0, import_react6.useRef)(false);
-  const pendingHintRef = (0, import_react6.useRef)(false);
-  (0, import_react6.useEffect)(() => {
+  const pendingLastRef = (0, import_react5.useRef)(false);
+  const pendingHintRef = (0, import_react5.useRef)(false);
+  (0, import_react5.useEffect)(() => {
     (async () => {
       const [pos, n, h, seen] = await Promise.all([
         loadPositions(),
@@ -19550,12 +19366,12 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       }
     }
   }
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     chRef.current = ch;
     renderChapter();
     if (ready2.current) persistPos();
   }, [ch, bookId, book]);
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     hlRef.current = highlights;
     const el = contentRef.current;
     if (!el) return;
@@ -19571,9 +19387,9 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       fresh.forEach((h) => appliedRef.current.add(h.id));
     }
   }, [highlights]);
-  const liveRef = (0, import_react6.useRef)({});
+  const liveRef = (0, import_react5.useRef)({});
   liveRef.current = { spread, setupSpread, measureSheet };
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     const pane = paneRef.current;
     if (!pane || typeof ResizeObserver === "undefined") return;
     let raf = 0, t = 0;
@@ -19599,7 +19415,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       window.removeEventListener("orientationchange", settle);
     };
   }, []);
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     const el = contentRef.current;
     if (!el || !ready2.current) return;
     if (spread) {
@@ -19624,10 +19440,10 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     setCh((c) => Math.max(0, Math.min(book.chapters.length - 1, c + delta)));
     setSelPop(null);
   }
-  const fold = (0, import_react6.useRef)(null);
-  const flipRef = (0, import_react6.useRef)(null);
-  const peelRef = (0, import_react6.useRef)(null);
-  const skipGhostRef = (0, import_react6.useRef)(false);
+  const fold = (0, import_react5.useRef)(null);
+  const flipRef = (0, import_react5.useRef)(null);
+  const peelRef = (0, import_react5.useRef)(null);
+  const skipGhostRef = (0, import_react5.useRef)(false);
   function applySpread(idx, animate) {
     const el = contentRef.current;
     const s = spreadRef.current;
@@ -20214,7 +20030,7 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       setSelPop({ ...pos, mode: "ask" });
     }
   }
-  (0, import_react6.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     if (!noteMode) return;
     let t = 0;
     const onSel = () => {
@@ -20320,33 +20136,33 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
   }
   const chNotes = notes.filter((n) => n.bookId === bookId && n.chapter === ch);
   const noteCount = chNotes.length;
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "screen reader" + (noteMode ? " notemode" : "") + (immersive ? " immersive" : "") + (tool === "hl" && noteMode ? " hlmode" : "") + (showCover ? coverOpening ? " copen" : coverShut ? " cshut" : " cwait" : ""), children: [
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "rtop", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "back", onClick: () => {
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "screen reader" + (noteMode ? " notemode" : "") + (immersive ? " immersive" : "") + (tool === "hl" && noteMode ? " hlmode" : "") + (showCover ? coverOpening ? " copen" : coverShut ? " cshut" : " cwait" : ""), children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "rtop", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "back", onClick: () => {
         persistPos();
         onBack();
       }, children: "\u2190" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "title", children: book.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "chap", children: book.chapters[ch].title })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "title", children: book.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "chap", children: book.chapters[ch].title })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "spacer" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "iconbtn", title: "Search in book", onClick: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "spacer" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "iconbtn", title: "Search in book", onClick: () => {
         setSearchOpen((v2) => !v2);
         setTocOpen(false);
-      }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(SearchIcon, {}) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "iconbtn", title: "Chapters", onClick: () => {
+      }, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(SearchIcon, {}) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "iconbtn", title: "Chapters", onClick: () => {
         setTocOpen((v2) => !v2);
         setSearchOpen(false);
       }, children: "\u2261" }),
-      !showCover && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "iconbtn", title: "Close the book", onClick: closeBook, children: "\u25EB" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "modebtn" + (noteMode ? " on" : ""), onClick: () => {
+      !showCover && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "iconbtn", title: "Close the book", onClick: closeBook, children: "\u25EB" }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "modebtn" + (noteMode ? " on" : ""), onClick: () => {
         setNoteMode((v2) => !v2);
         setImmersive(false);
       }, children: noteMode ? "\u25AD Reading mode" : "\u25E8 Note mode" }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" })
     ] }),
-    tocOpen && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "rpop show", children: book.chapters.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+    tocOpen && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "rpop show", children: book.chapters.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
       "div",
       {
         className: "item" + (i === ch ? " cur" : ""),
@@ -20363,8 +20179,8 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
       },
       i
     )) }),
-    searchOpen && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "rpop show", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+    searchOpen && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "rpop show", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "input",
         {
           placeholder: "Search this book, press Enter",
@@ -20374,10 +20190,10 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
           }
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hint", children: "Searches every chapter" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hint", children: "Searches every chapter" })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "rbody", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "rbody", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
         "div",
         {
           className: "bookpane",
@@ -20389,23 +20205,23 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
           onClick: paneClick,
           onMouseUp: selectionEnd,
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(Scene, {}),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "bpage", ref: pageRef, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "bookinner", lang: "en", ref: sheetRef, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "bookflow", ref: contentRef, onScroll: onPageScroll }) }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "spine" }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Scene, {}),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bpage", ref: pageRef, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookinner", lang: "en", ref: sheetRef, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "bookflow", ref: contentRef, onScroll: onPageScroll }) }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "spine" }),
             bound && sheetBox && !showCover && (() => {
               const MAX = Math.max(9, Math.min(26, Math.round(sheetBox.w * 0.028)));
               const l3 = Math.max(1, Math.round(MAX * prog));
               const r = Math.max(1, Math.round(MAX * (1 - prog)));
               const top = sheetBox.top + 6, h = Math.max(20, sheetBox.h - 12);
-              return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+              return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   "div",
                   {
                     className: "edgestack es-left",
                     style: { left: sheetBox.left - l3, top, width: l3, height: h }
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
                   "div",
                   {
                     className: "edgestack es-right",
@@ -20414,22 +20230,22 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
                 )
               ] });
             })(),
-            spread && !showCover && spreadInfo.colW > 0 && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.title : "" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft + spreadInfo.colW + spreadInfo.gap, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.chapters[ch].title : "" }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "folio", style: { left: spreadInfo.boxLeft, width: spreadInfo.colW }, children: spreadInfo.idx * 2 + 1 }),
-              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "folio", style: { left: spreadInfo.boxLeft + spreadInfo.colW + spreadInfo.gap, width: spreadInfo.colW }, children: spreadInfo.idx * 2 + 2 })
+            spread && !showCover && spreadInfo.colW > 0 && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.title : "" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "runhead", style: { left: spreadInfo.boxLeft + spreadInfo.colW + spreadInfo.gap, width: spreadInfo.colW }, children: spreadInfo.idx > 0 ? book.chapters[ch].title : "" }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "folio", style: { left: spreadInfo.boxLeft, width: spreadInfo.colW }, children: spreadInfo.idx * 2 + 1 }),
+              /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "folio", style: { left: spreadInfo.boxLeft + spreadInfo.colW + spreadInfo.gap, width: spreadInfo.colW }, children: spreadInfo.idx * 2 + 2 })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "pagechip", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "pagechip", children: [
               "\u25A4 ",
               noteCount === 0 ? "no notes yet" : `${noteCount} note${noteCount > 1 ? "s" : ""} in this chapter`
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "readprog", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("i", { style: { width: (ch + 1) / book.chapters.length * 100 + "%" } }) })
+            /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "readprog", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("i", { style: { width: (ch + 1) / book.chapters.length * 100 + "%" } }) })
           ]
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "notepanel" + (popout ? " popout" : ""), children: [
-        noteMode && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "notepanel" + (popout ? " popout" : ""), children: [
+        noteMode && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
           NotePanel,
           {
             tool,
@@ -20448,10 +20264,10 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
             toast
           }
         ),
-        noteMode && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "popbtn", onClick: () => setPopout((v2) => !v2), children: "\u25F1" })
+        noteMode && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { className: "popbtn", onClick: () => setPopout((v2) => !v2), children: "\u25F1" })
       ] })
     ] }),
-    showCover && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+    showCover && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
       "div",
       {
         className: "coverintro" + (coverOpening ? " opening" : "") + (coverShut ? " shutting" : "") + (coverRect ? " placed" : ""),
@@ -20468,30 +20284,30 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
           }, 1e3);
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
             "div",
             {
               className: "coverflip",
               style: coverRect ? { ...coverStyle(book), left: coverRect.left, top: coverRect.top, width: coverRect.w, height: coverRect.h } : coverStyle(book),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "coverface front", "data-cs": settings.coverStyle, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { className: "genre", children: book.genre }),
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: book.title })
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "coverface front", "data-cs": settings.coverStyle, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("span", { className: "genre", children: book.genre }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("h2", { children: book.title })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "mono", children: monogram(book.title) }),
-                    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("small", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "mono", children: monogram(book.title) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("small", { children: [
                       book.chapters.length,
                       " chapters"
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "coverface back", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "endpaper" }) })
+                /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "coverface back", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "endpaper" }) })
               ]
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
             "div",
             {
               className: "tapline",
@@ -20502,39 +20318,39 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
         ]
       }
     ),
-    hint && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hintwrap", onClick: dismissHint, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintzone", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintdot hd1", children: "back a chapter" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintzone mid", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "hintdot hd2", children: [
+    hint && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hintwrap", onClick: dismissHint, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintzone", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintdot hd1", children: "back a chapter" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintzone mid", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "hintdot hd2", children: [
         "tap: full screen",
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("br", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("br", {}),
         "swipe: turn"
       ] }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintzone", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintdot hd3", children: "next chapter" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "hintcap", children: "tap anywhere to start reading" })
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintzone", children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintdot hd3", children: "next chapter" }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "hintcap", children: "tap anywhere to start reading" })
     ] }),
-    selPop && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "selpop show", style: { left: selPop.x, top: selPop.y }, children: [
-      selPop.mode === "ask" && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)(import_jsx_runtime6.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => doHighlight(false), children: "\u25AC Highlight" }),
-        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: async () => {
+    selPop && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "selpop show", style: { left: selPop.x, top: selPop.y }, children: [
+      selPop.mode === "ask" && /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(import_jsx_runtime5.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { onClick: () => doHighlight(false), children: "\u25AC Highlight" }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { onClick: async () => {
           const hl = await doHighlight(false);
           if (hl) addQuote(hl);
         }, children: "\u25AC Highlight \uFF0B note" })
       ] }),
-      selPop.mode === "done" && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { onClick: () => addQuote(selPop.hl), children: "\uFF0B Add to note" })
+      selPop.mode === "done" && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("button", { onClick: () => addQuote(selPop.hl), children: "\uFF0B Add to note" })
     ] })
   ] });
 }
 
 // reader-app/src/screens/NotesLibrary.jsx
-var import_react7 = __toESM(require_react(), 1);
-var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
+var import_react6 = __toESM(require_react(), 1);
+var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
 function NotesLibrary({ onBack, onOpen, onSettings, toast, cs }) {
   const books = getBooks();
-  const [notes, setNotes] = (0, import_react7.useState)([]);
-  const [highlights, setHighlights] = (0, import_react7.useState)([]);
-  const [sel, setSel] = (0, import_react7.useState)(books[0].id);
-  const [gotoPop, setGotoPop] = (0, import_react7.useState)(null);
-  (0, import_react7.useEffect)(() => {
+  const [notes, setNotes] = (0, import_react6.useState)([]);
+  const [highlights, setHighlights] = (0, import_react6.useState)([]);
+  const [sel, setSel] = (0, import_react6.useState)(books[0].id);
+  const [gotoPop, setGotoPop] = (0, import_react6.useState)(null);
+  (0, import_react6.useEffect)(() => {
     (async () => {
       setNotes(await loadNotes());
       setHighlights(await loadHighlights());
@@ -20557,59 +20373,59 @@ function NotesLibrary({ onBack, onOpen, onSettings, toast, cs }) {
   function noteClick(e, n) {
     setGotoPop({ x: Math.min(e.clientX, window.innerWidth - 180), y: e.clientY + 12, note: n });
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "screen noteslib", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "nlbody", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "nlside", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("h1", { children: [
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "screen noteslib", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "nlbody", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "nlside", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("h1", { children: [
           "Notes",
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { style: { float: "right" }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" }) })
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("span", { style: { float: "right" }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" }) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: "navbtn", onClick: onBack, children: "\u2190 Library" }),
-        books.map((b2) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "bookrow" + (sel === b2.id ? " active" : ""), onClick: () => setSel(b2.id), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "dot", "data-cs": cs, style: coverStyle(b2) }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "navbtn", onClick: onBack, children: "\u2190 Library" }),
+        books.map((b2) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "bookrow" + (sel === b2.id ? " active" : ""), onClick: () => setSel(b2.id), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "dot", "data-cs": cs, style: coverStyle(b2) }),
           b2.title
         ] }, b2.id))
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "nlmain", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "notebook", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h2", { children: book.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "sub", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "nlmain", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "notebook", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("h2", { children: book.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "sub", children: [
           "Your notes, collected as a book \xB7 ",
           bookNotes.length + bookHls.length,
           " entries"
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: "exportbtn", onClick: doExport, children: "\u2193 Export notes as .md" }),
+        /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("button", { className: "exportbtn", onClick: doExport, children: "\u2193 Export notes as .md" }),
         book.chapters.map((c, i) => {
           const chN = bookNotes.filter((n) => n.chapter === i);
           const chH = bookHls.filter((h) => h.chapter === i);
           if (!chN.length && !chH.length) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "nb-ch", children: c.title }),
-            chH.map((h) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "nb-quote", onClick: (e) => noteClick(e, { chapter: i, hlId: h.id }), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "nb-ch", children: c.title }),
+            chH.map((h) => /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "nb-quote", onClick: (e) => noteClick(e, { chapter: i, hlId: h.id }), children: [
               '"',
               h.exact,
               '"'
             ] }, h.id)),
-            chN.map((n) => n.type === "ink" ? /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "nb-ink", onClick: (e) => noteClick(e, n), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("img", { src: n.img, alt: "ink note" }),
-              /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("small", { children: [
+            chN.map((n) => n.type === "ink" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "nb-ink", onClick: (e) => noteClick(e, n), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("img", { src: n.img, alt: "ink note" }),
+              /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("small", { children: [
                 "kept as ink \xB7 ",
                 n.pageLabel
               ] })
-            ] }, n.id) : n.type === "text" ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "nb-note", onClick: (e) => noteClick(e, n), children: n.content }, n.id) : null)
+            ] }, n.id) : n.type === "text" ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "nb-note", onClick: (e) => noteClick(e, n), children: n.content }, n.id) : null)
           ] }, i);
         }),
-        !bookNotes.length && !bookHls.length && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "nb-empty nb-doodle", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("svg", { width: "120", height: "80", viewBox: "0 0 120 80", children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "2", opacity: "0.45", strokeLinecap: "round", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("path", { d: "M18 60 q10 -34 30 -38 q26 -6 34 14 q6 16 -8 22 q-16 7 -22 -6" }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("circle", { cx: "86", cy: "26", r: "4", fill: "currentColor", stroke: "none" }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("circle", { cx: "97", cy: "18", r: "2.5", fill: "currentColor", stroke: "none" }),
-            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("path", { d: "M96 58 q8 -6 16 0" })
+        !bookNotes.length && !bookHls.length && /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("div", { className: "nb-empty nb-doodle", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("svg", { width: "120", height: "80", viewBox: "0 0 120 80", children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("g", { fill: "none", stroke: "currentColor", strokeWidth: "2", opacity: "0.45", strokeLinecap: "round", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { d: "M18 60 q10 -34 30 -38 q26 -6 34 14 q6 16 -8 22 q-16 7 -22 -6" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("circle", { cx: "86", cy: "26", r: "4", fill: "currentColor", stroke: "none" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("circle", { cx: "97", cy: "18", r: "2.5", fill: "currentColor", stroke: "none" }),
+            /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("path", { d: "M96 58 q8 -6 16 0" })
           ] }) }),
           "This notebook is still dreaming. Open the book, switch to note mode, and give it a first thought."
         ] })
       ] }) })
     ] }),
-    gotoPop && /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "selpop show", style: { left: gotoPop.x, top: gotoPop.y }, children: /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("button", { onClick: () => onOpen(sel, { bookId: sel, chapter: gotoPop.note.chapter, hlId: gotoPop.note.hlId || null }), children: [
+    gotoPop && /* @__PURE__ */ (0, import_jsx_runtime6.jsx)("div", { className: "selpop show", style: { left: gotoPop.x, top: gotoPop.y }, children: /* @__PURE__ */ (0, import_jsx_runtime6.jsxs)("button", { onClick: () => onOpen(sel, { bookId: sel, chapter: gotoPop.note.chapter, hlId: gotoPop.note.hlId || null }), children: [
       "\u25B8 Go to chapter ",
       gotoPop.note.chapter + 1
     ] }) })
@@ -20617,8 +20433,8 @@ function NotesLibrary({ onBack, onOpen, onSettings, toast, cs }) {
 }
 
 // reader-app/src/components/SettingsPanel.jsx
-var import_react8 = __toESM(require_react(), 1);
-var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+var import_react7 = __toESM(require_react(), 1);
+var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
 var THEMES = [
   { id: "airy", label: "Clean and airy", cls: "t-airy" },
   { id: "dark", label: "Soft dark", cls: "t-dark" },
@@ -20641,33 +20457,33 @@ var PAGES = [
   { id: "type", label: "Typewriter", cls: "sheet-type" }
 ];
 function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
-  const [tab, setTab] = (0, import_react8.useState)("general");
+  const [tab, setTab] = (0, import_react7.useState)("general");
   if (!open) return null;
   const set = (patch) => setSettings({ ...settings, ...patch });
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setwrap show", children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "setbg", onClick: onClose }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setpanel", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h3", { children: "Settings" }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "settabs", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { className: tab === "general" ? "active" : "", onClick: () => setTab("general"), children: "General" }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { className: tab === "design" ? "active" : "", onClick: () => setTab("design"), children: "Design" })
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setwrap show", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setbg", onClick: onClose }),
+    /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setpanel", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h3", { children: "Settings" }),
+      /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "settabs", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: tab === "general" ? "active" : "", onClick: () => setTab("general"), children: "General" }),
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { className: tab === "design" ? "active" : "", onClick: () => setTab("design"), children: "Design" })
       ] }),
-      tab === "general" && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setsec on", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Reading font size" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "fontrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { onClick: () => set({ fontSize: Math.max(14, settings.fontSize - 1) }), children: "A\u2212" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { onClick: () => set({ fontSize: Math.min(23, settings.fontSize + 1) }), children: "A\uFF0B" }),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+      tab === "general" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setsec on", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Reading font size" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "fontrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { onClick: () => set({ fontSize: Math.max(14, settings.fontSize - 1) }), children: "A\u2212" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("button", { onClick: () => set({ fontSize: Math.min(23, settings.fontSize + 1) }), children: "A\uFF0B" }),
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
               settings.fontSize,
               " px"
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Line spacing" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "sliderrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Line spacing" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "sliderrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "range",
@@ -20678,13 +20494,13 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
                 onChange: (e) => set({ lineHeight: e.target.value / 10 })
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("span", { children: Number(settings.lineHeight).toFixed(2) })
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("span", { children: Number(settings.lineHeight).toFixed(2) })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Brightness" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "sliderrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Brightness" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "sliderrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "range",
@@ -20694,15 +20510,15 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
                 onChange: (e) => set({ brightness: +e.target.value })
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("span", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("span", { children: [
               settings.brightness,
               "%"
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Page turn" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "ambseg", children: [["slide", "Quiet slide"], ["curl", "Page curl"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Page turn" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "ambseg", children: [["slide", "Quiet slide"], ["curl", "Page curl"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "button",
             {
               className: settings.pageTurn === id ? "active" : "",
@@ -20712,9 +20528,9 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             id
           )) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Layout" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "ambseg", children: [["auto", "Auto"], ["single", "One page"], ["spread", "Two pages"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Layout" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "ambseg", children: [["auto", "Auto"], ["single", "One page"], ["spread", "Two pages"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "button",
             {
               className: (settings.layout || "auto") === id ? "active" : "",
@@ -20723,12 +20539,12 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             },
             id
           )) }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "setnote", children: "Auto: two pages when you hold the tablet sideways, one when upright." })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setnote", children: "Auto: two pages when you hold the tablet sideways, one when upright." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Opening a book" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "checkrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Opening a book" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "checkrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "checkbox",
@@ -20739,10 +20555,10 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             " Start with the cover"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Motion" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "checkrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Motion" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "checkrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "checkbox",
@@ -20753,15 +20569,15 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             " Reduce motion"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow dim", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Listening (v2)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "setnote", children: "Voice \xB7 Speed \xB7 Auto-scroll while reading aloud" })
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow dim", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Listening (v2)" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setnote", children: "Voice \xB7 Speed \xB7 Auto-scroll while reading aloud" })
         ] })
       ] }),
-      tab === "design" && /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setsec on", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Theme" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "twdots", children: THEMES.map((t, i) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      tab === "design" && /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setsec on", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Theme" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "twdots", children: THEMES.map((t, i) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "div",
             {
               title: t.label,
@@ -20772,42 +20588,42 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             t.id
           )) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Book covers" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "pgopts", children: COVERS.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Book covers" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "pgopts", children: COVERS.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
             "div",
             {
               className: "pgopt" + (settings.coverStyle === c.id ? " sel" : ""),
               style: { "--i": i },
               onClick: () => set({ coverStyle: c.id }),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "sheet cmini", "data-cs": c.id, style: { "--chue": 205 } }),
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: c.label })
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "sheet cmini", "data-cs": c.id, style: { "--chue": 205 } }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: c.label })
               ]
             },
             c.id
           )) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Page style" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "pgopts", children: PAGES.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Page style" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "pgopts", children: PAGES.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)(
             "div",
             {
               className: "pgopt" + (settings.pageStyle === p.id ? " sel" : ""),
               style: { "--i": i },
               onClick: () => set({ pageStyle: p.id }),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "sheet " + p.cls }),
-                /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("small", { children: p.label })
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "sheet " + p.cls }),
+                /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("small", { children: p.label })
               ]
             },
             p.id
           )) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Typography" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "checkrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Typography" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "checkrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "checkbox",
@@ -20818,9 +20634,9 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             " Match font to page style"
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Ambience" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "ambseg", children: ["full", "subtle", "off"].map((a) => /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Ambience" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "ambseg", children: ["full", "subtle", "off"].map((a) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "button",
             {
               className: settings.ambience === a ? "active" : "",
@@ -20830,10 +20646,10 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             a
           )) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { className: "setrow", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h4", { children: "Ambient sound" }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("label", { className: "checkrow", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Ambient sound" }),
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("label", { className: "checkrow", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
               "input",
               {
                 type: "checkbox",
@@ -20846,7 +20662,7 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
             ),
             "Birds and town by day, crickets at night"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "setnote", children: "Synthesized for now \u2014 recorded CC0 loops replace this in the ambience pass." })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setnote", children: "Synthesized for now \u2014 recorded CC0 loops replace this in the ambience pass." })
         ] })
       ] })
     ] })
@@ -20950,8 +20766,8 @@ function startAmbient() {
 }
 
 // reader-app/src/App.jsx
-var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
-var ErrorBoundary = class extends import_react9.default.Component {
+var import_jsx_runtime8 = __toESM(require_jsx_runtime(), 1);
+var ErrorBoundary = class extends import_react8.default.Component {
   constructor(props) {
     super(props);
     this.state = { err: null };
@@ -20961,27 +20777,27 @@ var ErrorBoundary = class extends import_react9.default.Component {
   }
   render() {
     if (this.state.err) {
-      return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("div", { style: { padding: "60px 40px", fontFamily: "Georgia,serif", maxWidth: 480, margin: "0 auto" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h2", { style: { marginBottom: 12 }, children: "Something went wrong" }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("p", { style: { lineHeight: 1.6, marginBottom: 20 }, children: "Your books, notes and highlights are safe in storage. Reload to carry on reading." }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("button", { onClick: () => location.reload(), style: { padding: "12px 22px", borderRadius: 10, border: "1px solid #999", background: "#fff", cursor: "pointer", fontSize: 14 }, children: "Reload" })
+      return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)("div", { style: { padding: "60px 40px", fontFamily: "Georgia,serif", maxWidth: 480, margin: "0 auto" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h2", { style: { marginBottom: 12 }, children: "Something went wrong" }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("p", { style: { lineHeight: 1.6, marginBottom: 20 }, children: "Your books, notes and highlights are safe in storage. Reload to carry on reading." }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("button", { onClick: () => location.reload(), style: { padding: "12px 22px", borderRadius: 10, border: "1px solid #999", background: "#fff", cursor: "pointer", fontSize: 14 }, children: "Reload" })
       ] });
     }
     return this.props.children;
   }
 };
 function App() {
-  const [screen, setScreen] = (0, import_react9.useState)("library");
-  const [bookId, setBookId] = (0, import_react9.useState)(null);
-  const [jump, setJump] = (0, import_react9.useState)(null);
-  const [settings, setSettings] = (0, import_react9.useState)(null);
-  const [positions, setPositions] = (0, import_react9.useState)({});
-  const [settingsOpen, setSettingsOpen] = (0, import_react9.useState)(false);
-  const [toastMsg, setToastMsg] = (0, import_react9.useState)("");
-  const toastTimer = (0, import_react9.useRef)(null);
-  const [booksReady, setBooksReady] = (0, import_react9.useState)(0);
-  const [wide, setWide] = (0, import_react9.useState)(() => typeof window === "undefined" ? true : window.innerWidth >= window.innerHeight * 1.15);
-  (0, import_react9.useEffect)(() => {
+  const [screen, setScreen] = (0, import_react8.useState)("library");
+  const [bookId, setBookId] = (0, import_react8.useState)(null);
+  const [jump, setJump] = (0, import_react8.useState)(null);
+  const [settings, setSettings] = (0, import_react8.useState)(null);
+  const [positions, setPositions] = (0, import_react8.useState)({});
+  const [settingsOpen, setSettingsOpen] = (0, import_react8.useState)(false);
+  const [toastMsg, setToastMsg] = (0, import_react8.useState)("");
+  const toastTimer = (0, import_react8.useRef)(null);
+  const [booksReady, setBooksReady] = (0, import_react8.useState)(0);
+  const [wide, setWide] = (0, import_react8.useState)(() => typeof window === "undefined" ? true : window.innerWidth >= window.innerHeight * 1.15);
+  (0, import_react8.useEffect)(() => {
     const onSize = () => setWide(window.innerWidth >= window.innerHeight * 1.15);
     window.addEventListener("resize", onSize);
     window.addEventListener("orientationchange", onSize);
@@ -20990,7 +20806,7 @@ function App() {
       window.removeEventListener("orientationchange", onSize);
     };
   }, []);
-  (0, import_react9.useEffect)(() => {
+  (0, import_react8.useEffect)(() => {
     (async () => {
       setImportedBooks(await loadImportedBooks());
       setBooksReady(1);
@@ -20999,7 +20815,7 @@ function App() {
     })();
     return () => stopAmbient();
   }, []);
-  (0, import_react9.useEffect)(() => {
+  (0, import_react8.useEffect)(() => {
     if (!settings) return;
     saveSettings(settings);
     if (settings.sound) startAmbient();
@@ -21027,7 +20843,7 @@ function App() {
     settings.reduceMotion ? "nomotion" : "",
     settings.fontMatch ? "fontmatch" : ""
   ].join(" ");
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(
     "div",
     {
       className: cls,
@@ -21037,8 +20853,8 @@ function App() {
       "data-layout": layout,
       style: { "--bookfs": settings.fontSize + "px", "--booklh": settings.lineHeight },
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(ErrorBoundary, { children: [
-          screen === "library" && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(ErrorBoundary, { children: [
+          screen === "library" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
             Library,
             {
               positions,
@@ -21050,7 +20866,7 @@ function App() {
               onBooksChanged: () => setBooksReady((v2) => v2 + 1)
             }
           ),
-          screen === "reader" && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          screen === "reader" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
             Reader,
             {
               bookId,
@@ -21062,7 +20878,7 @@ function App() {
               toast
             }
           ),
-          screen === "notes" && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+          screen === "notes" && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
             NotesLibrary,
             {
               onBack: backToLibrary,
@@ -21073,7 +20889,7 @@ function App() {
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
           SettingsPanel,
           {
             open: settingsOpen,
@@ -21083,16 +20899,16 @@ function App() {
             toast
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "dimmer", style: { opacity: (100 - settings.brightness) / 100 * 1.2 } }),
-        /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("div", { className: "toast" + (toastMsg ? " show" : ""), children: toastMsg })
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "dimmer", style: { opacity: (100 - settings.brightness) / 100 * 1.2 } }),
+        /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("div", { className: "toast" + (toastMsg ? " show" : ""), children: toastMsg })
       ]
     }
   );
 }
 
 // reader-app/src/main.jsx
-var import_jsx_runtime10 = __toESM(require_jsx_runtime(), 1);
-(0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime10.jsx)(App, {}));
+var import_jsx_runtime9 = __toESM(require_jsx_runtime(), 1);
+(0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime9.jsx)(App, {}));
 /*! Bundled license information:
 
 react/cjs/react.production.js:

@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#f6f1e7">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Inkling">
+<meta name="application-name" content="Inkling">
+<meta name="theme-color" content="#3a2a1a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Inkling</title>
 <style>/* reader-app/src/styles/app.css */
 * {
@@ -639,6 +645,13 @@ body {
   flex: 1;
   position: relative;
   overflow: hidden;
+  touch-action: pan-y;
+}
+.app[data-layout=spread] .bookpane {
+  touch-action: none;
+}
+.reader.notemode .bookpane {
+  touch-action: auto;
 }
 .bpage {
   position: absolute;
@@ -3440,8 +3453,15 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -16182,6 +16202,268 @@ var require_jsx_runtime = __commonJS({
   }
 });
 
+// reader-app/src/lib/zip.js
+async function inflateRaw(bytes) {
+  const ds = new DecompressionStream("deflate-raw");
+  const w2 = ds.writable.getWriter();
+  w2.write(bytes);
+  w2.close();
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+}
+function findEocd(view, len) {
+  const max = Math.min(len, 66e3);
+  for (let i = len - 22; i >= len - max && i >= 0; i--) {
+    if (view.getUint32(i, true) === EOCD_SIG) return i;
+  }
+  return -1;
+}
+async function readZip(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const view = new DataView(buffer);
+  const eocd = findEocd(view, bytes.length);
+  if (eocd < 0) throw new Error("Not a zip file");
+  let count = view.getUint16(eocd + 10, true);
+  let cdSize = view.getUint32(eocd + 12, true);
+  let cdOff = view.getUint32(eocd + 16, true);
+  if (cdOff === 4294967295 || count === 65535) {
+    const locOff = eocd - 20;
+    if (locOff >= 0 && view.getUint32(locOff, true) === 117853008) {
+      const z64 = Number(view.getBigUint64(locOff + 8, true));
+      if (view.getUint32(z64, true) === 101075792) {
+        count = Number(view.getBigUint64(z64 + 32, true));
+        cdSize = Number(view.getBigUint64(z64 + 40, true));
+        cdOff = Number(view.getBigUint64(z64 + 48, true));
+      }
+    }
+  }
+  const dec = new TextDecoder();
+  const entries = /* @__PURE__ */ new Map();
+  let p = cdOff;
+  for (let i = 0; i < count && p + 46 <= bytes.length; i++) {
+    if (view.getUint32(p, true) !== CD_SIG) break;
+    const method = view.getUint16(p + 10, true);
+    const compSize = view.getUint32(p + 20, true);
+    const nameLen = view.getUint16(p + 28, true);
+    const extraLen = view.getUint16(p + 30, true);
+    const commentLen = view.getUint16(p + 32, true);
+    const localOff = view.getUint32(p + 42, true);
+    const name = dec.decode(bytes.subarray(p + 46, p + 46 + nameLen));
+    entries.set(name, { method, compSize, localOff });
+    p += 46 + nameLen + extraLen + commentLen;
+  }
+  if (!entries.size) throw new Error("Empty or unreadable zip");
+  async function raw(name) {
+    const e = entries.get(name);
+    if (!e) return null;
+    const lo = e.localOff;
+    if (view.getUint32(lo, true) !== 67324752) return null;
+    const nameLen = view.getUint16(lo + 26, true);
+    const extraLen = view.getUint16(lo + 28, true);
+    const start = lo + 30 + nameLen + extraLen;
+    const chunk = bytes.subarray(start, start + e.compSize);
+    if (e.method === 0) return chunk;
+    if (e.method === 8) return inflateRaw(chunk);
+    throw new Error("Unsupported compression in zip");
+  }
+  return {
+    names: () => [...entries.keys()],
+    has: (n) => entries.has(n),
+    bytes: raw,
+    text: async (n) => {
+      const b2 = await raw(n);
+      return b2 ? new TextDecoder("utf-8").decode(b2) : null;
+    }
+  };
+}
+var EOCD_SIG, CD_SIG;
+var init_zip = __esm({
+  "reader-app/src/lib/zip.js"() {
+    EOCD_SIG = 101010256;
+    CD_SIG = 33639248;
+  }
+});
+
+// reader-app/src/lib/epub.js
+var epub_exports = {};
+__export(epub_exports, {
+  parseEpub: () => parseEpub
+});
+function resolvePath(base, rel) {
+  if (!rel) return null;
+  if (/^(https?:|data:|mailto:)/i.test(rel)) return rel;
+  const clean = rel.split("#")[0].split("?")[0];
+  const parts = base.split("/").slice(0, -1);
+  for (const seg of clean.split("/")) {
+    if (seg === "." || seg === "") continue;
+    if (seg === "..") parts.pop();
+    else parts.push(seg);
+  }
+  return parts.join("/");
+}
+function parseXml(text) {
+  const doc = new DOMParser().parseFromString(text, "application/xml");
+  if (doc.querySelector("parsererror")) return null;
+  return doc;
+}
+function bytesToDataUrl(bytes, mime) {
+  let bin = "";
+  const CH = 32768;
+  for (let i = 0; i < bytes.length; i += CH) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  }
+  return `data:${mime};base64,${btoa(bin)}`;
+}
+function stripJunk(root) {
+  root.querySelectorAll("script,style,link,meta,iframe,object,embed,form,input,button,audio,video").forEach((n) => n.remove());
+  root.querySelectorAll("*").forEach((el) => {
+    for (const a of [...el.attributes]) {
+      const n = a.name.toLowerCase();
+      if (n.startsWith("on") || n === "style" || n === "class" || n === "id" || n.startsWith("xmlns") || n.startsWith("epub:")) el.removeAttribute(a.name);
+      if (n === "href" && /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name);
+    }
+  });
+  root.querySelectorAll("a").forEach((a) => {
+    const span = document.createElement("span");
+    span.innerHTML = a.innerHTML;
+    a.replaceWith(span);
+  });
+}
+function headingText(root) {
+  const h = root.querySelector("h1,h2,h3,title");
+  const t = h && h.textContent.trim().replace(/\s+/g, " ");
+  return t && t.length < 130 ? t : null;
+}
+async function tocTitles(zip, opfPath, doc) {
+  const map = /* @__PURE__ */ new Map();
+  const manifest = [...doc.querySelectorAll("manifest > item")];
+  const navItem = manifest.find((i) => (i.getAttribute("properties") || "").split(/\s+/).includes("nav"));
+  if (navItem) {
+    const navPath = resolvePath(opfPath, navItem.getAttribute("href"));
+    const html = await zip.text(navPath);
+    if (html) {
+      const nav = new DOMParser().parseFromString(html, "application/xhtml+xml");
+      const list = nav.querySelector("nav") || nav;
+      list.querySelectorAll("a[href]").forEach((a) => {
+        const p = resolvePath(navPath, a.getAttribute("href"));
+        const t = a.textContent.trim().replace(/\s+/g, " ");
+        if (p && t && !map.has(p)) map.set(p, t);
+      });
+    }
+  }
+  if (!map.size) {
+    const spineEl = doc.querySelector("spine");
+    const ncxId = spineEl && spineEl.getAttribute("toc");
+    const ncxItem = ncxId ? manifest.find((i) => i.getAttribute("id") === ncxId) : manifest.find((i) => (i.getAttribute("media-type") || "").includes("dtbncx"));
+    if (ncxItem) {
+      const ncxPath = resolvePath(opfPath, ncxItem.getAttribute("href"));
+      const xml = await zip.text(ncxPath);
+      const ncx = xml && parseXml(xml);
+      if (ncx) {
+        ncx.querySelectorAll("navPoint").forEach((np) => {
+          const src = np.querySelector("content") && np.querySelector("content").getAttribute("src");
+          const lbl = np.querySelector("navLabel > text");
+          const p = resolvePath(ncxPath, src);
+          const t = lbl && lbl.textContent.trim().replace(/\s+/g, " ");
+          if (p && t && !map.has(p)) map.set(p, t);
+        });
+      }
+    }
+  }
+  return map;
+}
+async function parseEpub(buffer, fallbackTitle) {
+  const zip = await readZip(buffer);
+  const container = await zip.text("META-INF/container.xml");
+  let opfPath = null;
+  if (container) {
+    const cdoc = parseXml(container);
+    const rootfile = cdoc && cdoc.querySelector("rootfile");
+    opfPath = rootfile && rootfile.getAttribute("full-path");
+  }
+  if (!opfPath) opfPath = zip.names().find((n) => n.toLowerCase().endsWith(".opf"));
+  if (!opfPath) throw new Error("No OPF found \u2014 is this really an EPUB?");
+  const opfText = await zip.text(opfPath);
+  const doc = opfText && parseXml(opfText);
+  if (!doc) throw new Error("Could not read the EPUB package file");
+  const titleEl = doc.querySelector("metadata title") || [...doc.querySelectorAll("*")].find((n) => n.localName === "title");
+  const title = titleEl && titleEl.textContent.trim() || fallbackTitle;
+  const authorEl = [...doc.querySelectorAll("metadata *")].find((n) => n.localName === "creator");
+  const author = authorEl ? authorEl.textContent.trim() : "";
+  const byId = /* @__PURE__ */ new Map();
+  doc.querySelectorAll("manifest > item").forEach((i) => byId.set(i.getAttribute("id"), i));
+  const spine = [...doc.querySelectorAll("spine > itemref")].map((r) => byId.get(r.getAttribute("idref"))).filter(Boolean).filter((i) => (i.getAttribute("media-type") || "").includes("html")).map((i) => resolvePath(opfPath, i.getAttribute("href"))).filter(Boolean);
+  if (!spine.length) throw new Error("This EPUB has no readable chapters");
+  const titles = await tocTitles(zip, opfPath, doc);
+  const imgCache = /* @__PURE__ */ new Map();
+  let imgBytes = 0;
+  const chapters = [];
+  for (const path of spine) {
+    const html = await zip.text(path);
+    if (!html) continue;
+    let parsed = new DOMParser().parseFromString(html, "application/xhtml+xml");
+    if (parsed.querySelector("parsererror")) {
+      parsed = new DOMParser().parseFromString(html, "text/html");
+    }
+    const body = parsed.body || parsed.querySelector("body");
+    if (!body) continue;
+    const chTitle = titles.get(path) || headingText(body) || `Part ${chapters.length + 1}`;
+    const firstH = body.querySelector("h1,h2,h3");
+    if (firstH && firstH.textContent.trim().replace(/\s+/g, " ") === chTitle) firstH.remove();
+    for (const img of [...body.querySelectorAll("img,image")]) {
+      const src = img.getAttribute("src") || img.getAttribute("xlink:href") || img.getAttribute("href");
+      const p = resolvePath(path, src);
+      if (!p) {
+        img.remove();
+        continue;
+      }
+      if (/^(https?:|data:)/i.test(p)) {
+        img.setAttribute("src", p);
+        continue;
+      }
+      if (!imgCache.has(p)) {
+        if (imgBytes > IMG_BUDGET) {
+          img.remove();
+          continue;
+        }
+        const b2 = await zip.bytes(p);
+        if (!b2) {
+          img.remove();
+          continue;
+        }
+        imgBytes += b2.length;
+        const ext = p.split(".").pop().toLowerCase();
+        imgCache.set(p, bytesToDataUrl(b2, MIME[ext] || "image/jpeg"));
+      }
+      const el = document.createElement("img");
+      el.setAttribute("src", imgCache.get(p));
+      el.setAttribute("alt", img.getAttribute("alt") || "");
+      img.replaceWith(el);
+    }
+    stripJunk(body);
+    const inner = body.innerHTML.trim();
+    if (!inner || !body.textContent.trim()) continue;
+    chapters.push({ title: chTitle, html: inner });
+  }
+  if (!chapters.length) throw new Error("This EPUB had no text we could read");
+  return { title, author, chapters };
+}
+var IMG_BUDGET, MIME;
+var init_epub = __esm({
+  "reader-app/src/lib/epub.js"() {
+    init_zip();
+    IMG_BUDGET = 9 * 1024 * 1024;
+    MIME = {
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      gif: "image/gif",
+      svg: "image/svg+xml",
+      webp: "image/webp",
+      avif: "image/avif"
+    };
+  }
+});
+
 // reader-app/src/main.jsx
 var import_react9 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
@@ -17478,7 +17760,8 @@ var REGISTRY = [
 
 // reader-app/src/lib/books.js
 function parseBook(reg) {
-  const lines = reg.source.split("\n");
+  if (reg.chapters && reg.chapters.length) return reg;
+  const lines = (reg.source || "").split("\n");
   let title = reg.title;
   const chapters = [];
   let cur = null;
@@ -17631,7 +17914,7 @@ var DEFAULT_SETTINGS = {
   brightness: 100,
   reduceMotion: false,
   pageTurn: "slide",
-  layout: "single",
+  layout: "auto",
   openCover: true,
   coverStyle: "classic",
   lang: "NL"
@@ -17723,8 +18006,31 @@ function Library({ positions, onOpen, onNotes, onSettings, toast, onBooksChanged
     e.target.value = "";
     if (!file) return;
     const name = file.name.toLowerCase();
+    if (name.endsWith(".epub")) {
+      toast("Reading the EPUB\u2026");
+      try {
+        const { parseEpub: parseEpub2 } = await Promise.resolve().then(() => (init_epub(), epub_exports));
+        const fallback = file.name.replace(/\.epub$/i, "");
+        const parsed = await parseEpub2(await file.arrayBuffer(), fallback);
+        const book2 = {
+          id: "imp" + Date.now(),
+          title: parsed.title,
+          shelf: "books",
+          genre: parsed.author ? parsed.author : "Books \xB7 Imported",
+          hue: hueFor(parsed.title),
+          chapters: parsed.chapters
+        };
+        await saveImportedBook(book2);
+        setImportedBooks(await loadImportedBooks());
+        onBooksChanged();
+        toast(`"${parsed.title}" added \u2014 ${parsed.chapters.length} chapters`);
+      } catch (err) {
+        toast(err && err.message ? err.message : "That EPUB could not be read");
+      }
+      return;
+    }
     if (!name.endsWith(".md") && !name.endsWith(".txt") && !name.endsWith(".markdown")) {
-      toast("For now: .md and .txt files (HTML import comes later)");
+      toast("Supported: .epub, .md and .txt");
       return;
     }
     const source = await file.text();
@@ -17771,7 +18077,7 @@ function Library({ positions, onOpen, onNotes, onSettings, toast, onBooksChanged
         " books \xB7 Kaatje"
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "importbtn", onClick: () => fileRef.current && fileRef.current.click(), children: "\uFF0B Import file" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { ref: fileRef, type: "file", accept: ".md,.markdown,.txt", style: { display: "none" }, onChange: importFile }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { ref: fileRef, type: "file", accept: ".epub,.md,.markdown,.txt", style: { display: "none" }, onChange: importFile }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "navbtn", onClick: onNotes, children: "Notes" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { className: "gearbtn", onClick: onSettings, children: "\u25CE" })
     ] }),
@@ -18285,7 +18591,7 @@ function seededPos(seed) {
   };
   return (k) => `${Math.round(6 + r(k) * 88)}% ${Math.round(6 + r(k + 50) * 88)}%`;
 }
-function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
+function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
   const book = getBook(bookId);
   const [ch, setCh] = (0, import_react5.useState)(0);
   const [noteMode, setNoteMode] = (0, import_react5.useState)(false);
@@ -18319,7 +18625,7 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
   const lifted = settings.pageStyle === "type";
   const loose = settings.pageStyle === "papyrus";
   const stiff = settings.pageStyle === "parchment";
-  const spread = settings.layout === "spread";
+  const spread = layout === "spread";
   const chapterLabel = `Chapter ${ch + 1} of ${book.chapters.length}`;
   const [showCover, setShowCover] = (0, import_react5.useState)(false);
   const [coverOpening, setCoverOpening] = (0, import_react5.useState)(false);
@@ -18884,10 +19190,12 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
     f.flap.remove();
     fold.current = null;
   }
-  function animateFold(to, done) {
+  function animateFold(to, done, v2) {
     const f = fold.current;
     if (!f) return;
-    const from = f.cx, t0 = performance.now(), dur = 560;
+    const speed = Math.min(2.6, Math.max(0.55, v2 || 1));
+    const from = f.cx, t0 = performance.now();
+    const dur = Math.max(220, Math.min(760, 560 / speed));
     const ease = (t) => 1 - Math.pow(1 - t, 3);
     const step = (now) => {
       if (!fold.current) return;
@@ -18898,14 +19206,14 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
     };
     requestAnimationFrame(step);
   }
-  function commitFold() {
+  function commitFold(v2) {
     const f = fold.current;
     if (!f) return;
     animateFold(f.dir > 0 ? f.left : f.right, () => {
       skipGhostRef.current = true;
       go(f.dir);
       setTimeout(cleanupFold, 80);
-    });
+    }, v2);
   }
   function cancelFold() {
     const f = fold.current;
@@ -18925,6 +19233,22 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
   }
   function paneDown(e) {
     drag.current = { active: !noteMode, follow: false, sx: e.clientX, sy: e.clientY, dx: 0, suppress: false, peelDead: false };
+    if (!noteMode && e.currentTarget.setPointerCapture) {
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch (err) {
+      }
+    }
+  }
+  function paneCancel() {
+    const d2 = drag.current;
+    d2.active = false;
+    d2.follow = false;
+    if (peelRef.current) {
+      abortFlip(peelRef.current.h);
+      peelRef.current = null;
+    }
+    if (fold.current) cancelFold();
   }
   function paneMove(e) {
     const d2 = drag.current;
@@ -18968,6 +19292,16 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
         setLeaf(p.h, Math.min(p.h.motion === "sheet" ? 180 : 174, along / p.h.span * 180));
         return;
       }
+      const nowT = performance.now();
+      if (d2.lastT && nowT - d2.lastT > 8) {
+        d2.v = Math.abs(d2.dx - (d2.lastX || 0)) / (nowT - d2.lastT);
+        d2.lastT = nowT;
+        d2.lastX = d2.dx;
+      } else if (!d2.lastT) {
+        d2.lastT = nowT;
+        d2.lastX = d2.dx;
+        d2.v = 0;
+      }
       const edge = d2.dx < 0 && ch >= book.chapters.length - 1 || d2.dx > 0 && ch <= 0;
       if (turnMode === "curl" && !edge) {
         if (!fold.current) {
@@ -19008,8 +19342,9 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
     }
     if (spread && followed) return;
     if (fold.current) {
-      const past = Math.abs(dx) > Math.max(70, w2 * 0.16) && window.getSelection().isCollapsed;
-      if (past) commitFold();
+      const fv = d2.v || 0;
+      const past = (Math.abs(dx) > Math.max(70, w2 * 0.16) || fv > 0.9 && Math.abs(dx) > 24) && window.getSelection().isCollapsed;
+      if (past) commitFold(0.7 + Math.min(2, fv * 1.6));
       else cancelFold();
       return;
     }
@@ -19239,6 +19574,7 @@ function Reader({ bookId, jump, settings, onBack, onSettings, toast }) {
           onPointerDown: paneDown,
           onPointerMove: paneMove,
           onPointerUp: paneUp,
+          onPointerCancel: paneCancel,
           onClick: paneClick,
           onMouseUp: selectionEnd,
           children: [
@@ -19544,16 +19880,16 @@ function SettingsPanel({ open, onClose, settings, setSettings, toast }) {
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
           /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Layout" }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "ambseg", children: [["single", "One page"], ["spread", "Two pages"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "ambseg", children: [["auto", "Auto"], ["single", "One page"], ["spread", "Two pages"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
             "button",
             {
-              className: settings.layout === id ? "active" : "",
+              className: (settings.layout || "auto") === id ? "active" : "",
               onClick: () => set({ layout: id }),
               children: label
             },
             id
           )) }),
-          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setnote", children: "Two pages reads best in landscape." })
+          /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("div", { className: "setnote", children: "Auto: two pages when you hold the tablet sideways, one when upright." })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime7.jsxs)("div", { className: "setrow", children: [
           /* @__PURE__ */ (0, import_jsx_runtime7.jsx)("h4", { children: "Opening a book" }),
@@ -19810,6 +20146,16 @@ function App() {
   const [toastMsg, setToastMsg] = (0, import_react8.useState)("");
   const toastTimer = (0, import_react8.useRef)(null);
   const [booksReady, setBooksReady] = (0, import_react8.useState)(0);
+  const [wide, setWide] = (0, import_react8.useState)(() => typeof window === "undefined" ? true : window.innerWidth >= window.innerHeight * 1.15);
+  (0, import_react8.useEffect)(() => {
+    const onSize = () => setWide(window.innerWidth >= window.innerHeight * 1.15);
+    window.addEventListener("resize", onSize);
+    window.addEventListener("orientationchange", onSize);
+    return () => {
+      window.removeEventListener("resize", onSize);
+      window.removeEventListener("orientationchange", onSize);
+    };
+  }, []);
   (0, import_react8.useEffect)(() => {
     (async () => {
       setImportedBooks(await loadImportedBooks());
@@ -19840,7 +20186,8 @@ function App() {
     setScreen("library");
   }
   if (!settings || !booksReady) return null;
-  const layout = settings.layout || "single";
+  const pref = settings.layout || "auto";
+  const layout = pref === "spread" || pref === "auto" && wide ? "spread" : "single";
   const cls = [
     "app",
     settings.reduceMotion ? "nomotion" : "",
@@ -19875,6 +20222,7 @@ function App() {
               bookId,
               jump,
               settings,
+              layout,
               onBack: backToLibrary,
               onSettings: () => setSettingsOpen(true),
               toast

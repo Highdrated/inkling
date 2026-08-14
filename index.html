@@ -10,8 +10,8 @@
 <meta name="application-name" content="Inkling">
 <meta name="theme-color" content="#3a2a1a">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon192.png">
 <title>Inkling</title>
 <style>/* reader-app/src/styles/app.css */
 * {
@@ -1702,11 +1702,22 @@ body {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  contain: layout paint style;
 }
 .bpage.sfpage {
   position: absolute;
   overflow: hidden;
   z-index: auto;
+  contain: layout paint style;
+}
+.sflipwrap,
+.sflip,
+.sface,
+.soverlay {
+  backface-visibility: hidden;
+}
+.sflip {
+  will-change: transform;
 }
 .sflipsheen {
   position: absolute;
@@ -18936,10 +18947,6 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     const wrap = document.createElement("div");
     wrap.className = "sflipwrap";
     wrap.style.cssText = `left:${PL}px;top:${PT}px;width:${PW}px;height:${PH}px;`;
-    const keep = document.createElement("div");
-    keep.className = "soverlay";
-    keep.style.cssText = `left:${sx + keepOff}px;top:${sy}px;width:${half}px;height:${H2}px;` + (motion === "sheet" ? "display:none;" : "");
-    if (motion !== "sheet") keep.appendChild(facePage(oldClone.cloneNode(true), -(sx + keepOff)));
     const flip = document.createElement("div");
     flip.className = "sflip" + (motion === "sheet" ? " sheetleaf" : "");
     flip.style.cssText = `left:${sx + flipOff}px;top:${sy}px;width:${leafW}px;height:${H2}px;` + (motion === "sheet" ? "transform-origin:50% 60%;" : `transform-origin:${delta > 0 ? "left" : "right"} center;`);
@@ -18958,7 +18965,6 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     under.style.cssText = `left:${sx + flipOff}px;top:${sy}px;width:${leafW}px;height:${H2}px;`;
     const dim = document.createElement("div");
     dim.className = "underdim " + (delta > 0 ? "ud-next" : "ud-prev");
-    wrap.appendChild(keep);
     wrap.appendChild(under);
     wrap.appendChild(flip);
     pane.appendChild(wrap);
@@ -19064,8 +19070,14 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     if (flipRef.current === h.wrap) flipRef.current = null;
   }
   function endFlip(h, commit, v2) {
-    if (commit) commit();
-    runLeaf(h, 180, v2, () => setTimeout(() => dropFlip(h), 60));
+    h.onLate = commit;
+    runLeaf(h, 180, v2, () => {
+      if (h.onLate) {
+        h.onLate();
+        h.onLate = null;
+      }
+      setTimeout(() => dropFlip(h), 90);
+    });
   }
   function abortFlip(h) {
     runLeaf(h, 0, 1.6, () => dropFlip(h));
@@ -19390,32 +19402,65 @@ function Reader({ bookId, jump, settings, layout, onBack, onSettings, toast }) {
     if (!noteMode) setImmersive((v2) => !v2);
   }
   async function hlClick(e) {
-    if (!(noteMode && tool === "erase")) return;
-    const span = e.target.closest(".hl");
-    if (!span) return;
+    if (!noteMode) return false;
+    const span = e.target && e.target.closest && e.target.closest(".hl");
+    if (!span) return false;
+    if (tool !== "erase") return false;
+    appliedRef.current.delete(span.dataset.hl);
+    const parent = span.parentNode;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    parent.normalize();
     const all = await removeHighlight(span.dataset.hl);
+    hlRef.current = all;
     setHighlights(all);
     toast("Highlight removed");
+    return true;
   }
-  function selectionEnd(e) {
+  function selectionEnd() {
     const sel = window.getSelection();
     const el = contentRef.current;
-    const valid = noteMode && sel && !sel.isCollapsed && el && el.contains(sel.anchorNode);
+    const valid = noteMode && sel && sel.rangeCount && !sel.isCollapsed && el && el.contains(sel.anchorNode);
     if (!valid) {
       setSelPop(null);
       return;
     }
     const range = sel.getRangeAt(0).cloneRange();
+    if (!range.toString().trim()) {
+      setSelPop(null);
+      return;
+    }
     savedRange.current = range;
-    const pos = { x: Math.min(e.clientX, window.innerWidth - 240), y: e.clientY + 14 };
+    const r = range.getBoundingClientRect();
+    const pos = {
+      x: Math.max(12, Math.min(Math.round(r.left + r.width / 2 - 96), window.innerWidth - 250)),
+      y: Math.min(Math.round(r.bottom + 16), window.innerHeight - 96)
+    };
     if (tool === "hl") {
       doHighlight(true).then((hl) => {
+        try {
+          window.getSelection().removeAllRanges();
+        } catch (err) {
+        }
         if (hl) setSelPop({ ...pos, mode: "done", hl });
       });
     } else if (tool !== "erase") {
       setSelPop({ ...pos, mode: "ask" });
     }
   }
+  (0, import_react5.useEffect)(() => {
+    if (!noteMode) return;
+    let t = 0;
+    const onSel = () => {
+      clearTimeout(t);
+      t = setTimeout(selectionEnd, 360);
+    };
+    document.addEventListener("selectionchange", onSel);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener("selectionchange", onSel);
+    };
+  }, [noteMode, tool, ch]);
   async function doHighlight(silent) {
     const range = savedRange.current;
     if (!range) return null;

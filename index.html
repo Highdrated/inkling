@@ -22415,7 +22415,7 @@ function Reader({ bookId, jump, settings, setSettings, layout, onBack, onSetting
         p.raf = 0;
         return;
       }
-      setLeaf(p.h, cur + diff * (0.3 + Math.min(0.3, Math.abs(diff) / 90)));
+      setLeaf(p.h, cur + diff * (0.55 + Math.min(0.35, Math.abs(diff) / 70)));
       p.raf = requestAnimationFrame(tick);
     };
     p.raf = requestAnimationFrame(tick);
@@ -22436,7 +22436,7 @@ function Reader({ bookId, jump, settings, setSettings, layout, onBack, onSetting
     d2.dx = e.clientX - d2.sx;
     const dy = e.clientY - d2.sy;
     if (!d2.follow && !d2.peelDead && Math.abs(d2.dx) >= 4 && Math.abs(d2.dx) > Math.abs(dy) && !preRef.current) warmFlip(d2.dx < 0 ? 1 : -1);
-    if (!d2.follow && Math.abs(d2.dx) > 14 && Math.abs(d2.dx) > Math.abs(dy) * 1.4) d2.follow = true;
+    if (!d2.follow && Math.abs(d2.dx) > 8 && Math.abs(d2.dx) > Math.abs(dy) * 1.4) d2.follow = true;
     if (d2.follow && contentRef.current) {
       {
         const dir = d2.dx < 0 ? 1 : -1;
